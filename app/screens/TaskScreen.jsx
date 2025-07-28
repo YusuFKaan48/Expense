@@ -17,7 +17,7 @@ export default function TaskScreen() {
     </ScrollView>
      <Button
         word="Create a TaskScreen"
-        onPress={() => router.replace('/task/CreateTask')}
+        onPress={() => router.replace('/task/createTask')}
        />
       </View>
 

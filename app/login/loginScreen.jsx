@@ -15,17 +15,23 @@ export default function LoginScreen() {
     const handleLogin = async () => {
         setLoading(true);
         try {
+            console.log('Trying login with:', email, password);
+
             const token = await loginUser(email, password);
 
             console.log('Token:', token);
-
             router.replace('/screens/HomeScreen');
         } catch (error) {
+            console.log('Login error:', error);
+            console.log('Login error message:', error.message);
+
             Alert.alert('Login failed', error.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
     };
+
+
 
     return (
         <View className="flex-1 items-center justify-center bg-[#F3F1EF] px-8">
