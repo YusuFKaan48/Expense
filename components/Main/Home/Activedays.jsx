@@ -1,64 +1,85 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-
-const activityData = {
-  '2025/7/1': 1,
-  '2025/7/2': 3,
-  '2025/7/3': 7,
-  '2025/7/4': 10,
-  '2025/7/5': 13,
-  '2025/7/6': 2,
-  '2025/7/7': 6,
-  '2025/7/10': 12,
-  '2025/7/14': 5,
-  '2025/7/19': 11,
-  '2025/7/21': 4,
-  '2025/8/3': 5,
-  '2025/8/10': 7,
-  '2025/8/15': 2,
-  '2025/9/1': 6,
-  '2025/9/20': 11,
-  '2025/9/25': 4,
-};
+import React, { useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
+import { getRequest } from '@/helper/fetch';
 
 const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-const getBoxColor = (value) => {
-  if (!value) return '#E5E7EB';
-  if (value < 3) return '#9AE6B4';
-  if (value < 6) return '#68D391';
-  if (value < 9) return '#48BB78';
+const getBoxColor = (seconds) => {
+  if (!seconds || seconds <= 0) return '#E5E7EB';
+  const hours = seconds / 3600;
+  if (hours < 1) return '#9AE6B4';
+  if (hours < 3) return '#68D391';
+  if (hours < 5) return '#48BB78';
   return '#2F855A';
 };
 
 const generateWeeksForMonth = (year, month, data) => {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-
   const weeks = [];
   let currentWeek = new Array(7).fill(null);
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const date = new Date(year, month, d);
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    // Convert Sunday(0) to 6, Monday(1) to 0, etc.
     const dayOfWeek = (date.getDay() + 6) % 7;
+    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
     currentWeek[dayOfWeek] = {
-      dateStr: `${year}/${month + 1}/${d}`,
-      value: data[`${year}/${month + 1}/${d}`] || 0,
+      dateStr: dateKey,
+      value: data[dateKey] ?? 0,
     };
 
-    if (dayOfWeek === 6 || d === daysInMonth) {
+    if (dayOfWeek === 6 || day === daysInMonth) {
       weeks.push(currentWeek);
       currentWeek = new Array(7).fill(null);
     }
   }
+
   return weeks;
 };
 
-export default function ThreeMonthsActivity() {
-  const year = 2025;
-  const months = [6];
+export default function ActivityGraph() {
+  const [activityData, setActivityData] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const allWeeks = months.flatMap((month) => generateWeeksForMonth(year, month, activityData));
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const months = [month];
+
+    const fetchData = async () => {
+      try {
+        const result = await getRequest('work/times');
+        console.log('API result:', result);
+
+        const entries = Array.isArray(result.work_times) ? result.work_times : [];
+
+        const dataObj = {};
+        entries.forEach(entry => {
+          if (entry.start_time && typeof entry.duration_seconds === 'number') {
+            const date = entry.start_time.slice(0, 10);
+            const seconds = Math.abs(entry.duration_seconds);
+            dataObj[date] = seconds;
+          }
+        });
+
+        setActivityData(dataObj);
+      } catch (error) {
+        console.error('Failed to fetch activity data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) return <ActivityIndicator size="large" />;
+
+  const allWeeks = months.flatMap(month =>
+      generateWeeksForMonth(year, month, activityData)
+  );
 
   return (
       <View className="flex-1 mb-4">

@@ -44,6 +44,7 @@ export default function PostTasks() {
                     startDate={task.start_date}
                     endDate={task.end_date}
                     description={task.description}
+                    onComplete={fetchTasks}
                 />
             ))
         )}
