@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { getRequest } from '@/helper/fetch';
+import EventEmitter from '@/helper/EventEmitter';
 
 const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -73,6 +74,14 @@ export default function ActivityGraph() {
 
   useEffect(() => {
     fetchData();
+
+    const subscription = EventEmitter.on('workEnded', () => {
+      fetchData();
+    });
+
+    return () => {
+      subscription.off();
+    };
   }, []);
 
   if (loading) return <ActivityIndicator size="large" />;

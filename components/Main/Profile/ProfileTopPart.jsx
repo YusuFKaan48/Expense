@@ -46,8 +46,8 @@ export default function ProfileTopPart() {
             <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-4 w-full items-center">
                 <View className="justify-center items-center">
                     <UserCircle width={96} height={86} color="#000" />
-                    <Text className="text-[18px] font-regular text-black mt-1.5">{profile.name}</Text>
-                    <Text className="text-[12px] font-regular text-[#717073] mt-1">{profile.jobTitleName}</Text>
+                    <Text className="text-[20px] font-regular text-black mt-1.5">{profile.name}</Text>
+                    <Text className="text-[14px] font-regular  mt-1">{profile.jobTitleName}</Text>
                 </View>
             </View>
         </View>
