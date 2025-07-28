@@ -1,7 +1,7 @@
 import * as DocumentPicker from 'expo-document-picker';
 import React, { useEffect, useState } from 'react';
 import { Alert, Text, ScrollView, ActivityIndicator } from 'react-native';
-import { getRequest, postMultipartRequest } from '@/helper/fetch';
+import {getRequest, postMultipartRequest, postRequest} from '@/helper/fetch';
 import WhiteInfoCard from './WhiteInfoCard';
 import { StatusBar } from 'expo-status-bar';
 
@@ -13,8 +13,13 @@ export default function AddPdf() {
 
   const fileNameFromPath = (path) => {
     if (!path) return 'Unknown';
-    return path.split('/').pop();
+
+    const fullName = path.split('/').pop();
+    const cleanName = fullName.replace(/^\d+_/, '');
+
+    return cleanName;
   };
+
 
   const fetchUploadedPdfs = async () => {
     try {
@@ -73,7 +78,7 @@ export default function AddPdf() {
     });
 
     try {
-      const data = await postMultipartRequest({
+      const data = await postRequest({
         url: 'user/upload-pdfs',
         formData,
       });

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { postRequest } from '@/helper/fetch';
 
-export default function TaskCard({id, title, author, startDate, endDate, description, onComplete = () => {}}) {
+export default function TaskCard({ id, title, author, startDate, endDate, description, onComplete = () => {} }) {
     const router = useRouter();
     const [isCheckPressed, setIsCheckPressed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -12,14 +12,12 @@ export default function TaskCard({id, title, author, startDate, endDate, descrip
     const handleCompleteTask = async () => {
         try {
             setIsSubmitting(true);
-            const response = await postRequest({
-                url: `tasks/${id}/complete`,
-                parameters: {},
-            });
-            console.log('Task marked as completed:', response.message);
-            if (onComplete) onComplete();
+            const response = await postRequest({ url: `tasks/${id}/complete` });
+            console.log('Task completed:', response.message);
+            setIsCheckPressed(true);
+            await onComplete();  // Burada await kullanarak bekleyebilirsin
         } catch (err) {
-            console.error('Error marking task complete:', err);
+            console.error(err);
         } finally {
             setIsSubmitting(false);
         }
@@ -27,33 +25,21 @@ export default function TaskCard({id, title, author, startDate, endDate, descrip
 
     return (
         <TouchableOpacity
-            onPress={() =>
-                router.push({
-                    pathname: '/task/TaskTopTabs',
-                    params: { id, title, author, startDate, endDate, description },
-                })
-            }
+            onPress={() => router.push({ pathname: '/task/taskTopTabs', params: { id, title, author, startDate, endDate, description } })}
         >
             <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-2">
                 <View className="flex-row justify-between items-center">
                     <View>
                         <Text className="text-[18px] font-regular text-black">{title}</Text>
                         <Text className="text-[14px] font-regular text-black mt-1.5">Sent by {author}</Text>
-                        <Text className="text-[12px] font-regular mt-1.5 text-[#717073]">
-                            {startDate} - {endDate}
-                        </Text>
+                        <Text className="text-[12px] font-regular mt-1.5 text-[#717073]">{startDate} - {endDate}</Text>
                     </View>
                     <Pressable
-                        onPress={(e) => {
+                        onPress={e => {
                             e.stopPropagation();
-                            if (!isSubmitting) {
-                                setIsCheckPressed(true);
-                                handleCompleteTask();
-                            }
+                            if (!isSubmitting) handleCompleteTask();
                         }}
-                        className={`w-10 h-10 rounded-full items-center justify-center ${
-                            isCheckPressed ? 'bg-[#004030]' : 'bg-[#F3F1EF]'
-                        }`}
+                        className={`w-10 h-10 rounded-full items-center justify-center ${isCheckPressed ? 'bg-[#004030]' : 'bg-[#F3F1EF]'}`}
                     >
                         <Check width={24} height={24} color="#4B9782" />
                     </Pressable>
@@ -62,3 +48,4 @@ export default function TaskCard({id, title, author, startDate, endDate, descrip
         </TouchableOpacity>
     );
 }
+

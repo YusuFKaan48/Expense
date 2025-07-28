@@ -4,6 +4,7 @@ import WorkHoursTracker from '../../components/Main/Home/WorkHoursTracker';
 import Activedays from '../../components/Main/Home/Activedays';
 import ActiveTasks from '../../components/Main/Task/ActiveTasks';
 import { getRequest } from '@/helper/fetch';
+import Title from "@/components/Shared/Title";
 
 export default function HomeScreen() {
     const [userName, setUserName] = useState('');
@@ -37,7 +38,7 @@ export default function HomeScreen() {
 
     return (
         <ScrollView style={{ backgroundColor: '#F3F1EF', paddingTop: 64, paddingHorizontal: 32 }}>
-            <Text style={{ fontSize: 24, fontWeight: '500', color: 'black' }}>Hey {userName}!</Text>
+            <Text className="text-[24px] font-jacques font-medium text-black">Hey {userName}!</Text>
             <WorkHoursTracker />
             <Activedays />
             <ActiveTasks />

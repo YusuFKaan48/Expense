@@ -12,7 +12,7 @@ export default function Address() {
             const userData = await AsyncStorage.getItem('userData');
             if (userData) {
                 const user = JSON.parse(userData);
-                setAddress(user.address);
+                setAddress(user.addressName);
             } else {
                 setErrorMsg('User data not found.');
             }

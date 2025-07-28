@@ -40,7 +40,7 @@ export default function ProfileTopPart() {
 
     return (
         <View className="items-center w-full">
-            <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium text-black">
+            <Text className="text-[24px] font-jacques font-medium text-black ">
                 Profile
             </Text>
             <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-4 w-full items-center">

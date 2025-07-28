@@ -14,10 +14,9 @@ export default function ActiveTasks() {
       const activeTasks = (response.tasks || []).filter(
           task => task.pivot?.is_completed === 0
       );
-
       setTasks(activeTasks);
     } catch (error) {
-      console.error('An error occurred while fetching tasks:', error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -29,14 +28,14 @@ export default function ActiveTasks() {
 
   return (
       <View>
-        <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium text-black mb-4">
+        <Text className="text-[24px] font-jacques font-medium text-black mb-4">
           Active Tasks
         </Text>
 
         {loading ? (
             <ActivityIndicator size="large" color="#004030" />
         ) : (
-            tasks.map((task) => (
+            tasks.map(task => (
                 <TaskCard
                     key={task.id}
                     id={task.id}
@@ -45,9 +44,11 @@ export default function ActiveTasks() {
                     startDate={task.start_date}
                     endDate={task.end_date}
                     description={task.description}
+                    onComplete={fetchTasks}
                 />
             ))
         )}
       </View>
   );
 }
+

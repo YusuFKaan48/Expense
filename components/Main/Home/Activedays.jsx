@@ -56,47 +56,41 @@ const generateWeeksForMonth = (year, month, data) => {
 
 export default function ThreeMonthsActivity() {
   const year = 2025;
-  const months = [6]; 
+  const months = [6];
 
   const allWeeks = months.flatMap((month) => generateWeeksForMonth(year, month, activityData));
-  const totalWeeks = allWeeks.length;
 
   return (
-    <View className="flex-1 mb-4 ">
-      <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium text-black mb-4">Activity Graph</Text>
+      <View className="flex-1 mb-4">
+        <Text className="text-[24px] font-jacques font-medium text-black mb-4">
+          Activity Graph
+        </Text>
 
-      <View className="bg-white p-4 rounded-xl shadow-sm">
-        <View className="flex-row ml-14 mb-2">
-          {dayNames.map((day, idx) => (
-            <Text
-              key={idx}
-              className="text-medium text-center"
-              style={{ width: 40 }}
-            >
-              {day}
-            </Text>
-          ))}
-        </View>
-
-        {allWeeks.map((week, weekIdx) => (
-          <View key={weekIdx} className="flex-row items-center mb-[6px]">
-            <Text
-              className="text-medium  mr-1"
-              style={{ width: 50 }}
-            >
-              Week {weekIdx + 1}
-            </Text>
-
-            {week.map((entry, dayIdx) => (
-              <View
-                key={dayIdx}
-                className="w-[20px] h-[20px] rounded-sm mr-4 ml-2"
-                style={{ backgroundColor: getBoxColor(entry?.value) }}
-              />
+        <View className="bg-white p-4 rounded-xl shadow-sm">
+          <View className="flex-row ml-14 mb-2">
+            {dayNames.map((day, idx) => (
+                <Text key={idx} className="text-medium text-center" style={{ width: 40 }}>
+                  {day}
+                </Text>
             ))}
           </View>
-        ))}
+
+          {allWeeks.map((week, weekIdx) => (
+              <View key={weekIdx} className="flex-row items-center mb-[6px]">
+                <Text className="text-medium mr-1" style={{ width: 50 }}>
+                  Week {weekIdx + 1}
+                </Text>
+
+                {week.map((entry, dayIdx) => (
+                    <View
+                        key={dayIdx}
+                        className="w-[20px] h-[20px] rounded-sm mr-4 ml-2"
+                        style={{ backgroundColor: getBoxColor(entry?.value) }}
+                    />
+                ))}
+              </View>
+          ))}
+        </View>
       </View>
-    </View>
   );
 }

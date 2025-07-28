@@ -24,7 +24,7 @@ return (
         Welcome again!
       </Text>    
 
-      <Button word="Log In" onPress={() => router.replace('/login/loginScreen')}
+      <Button word="Log In" onPress={() => router.replace('/login')}
                 onPressIn={() => setIsPressed(true)}
                 onPressOut={() => setIsPressed(false)}
        />

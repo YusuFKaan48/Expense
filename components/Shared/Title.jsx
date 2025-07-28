@@ -2,7 +2,7 @@ import {Text, View} from 'react-native';
 import { useFonts } from 'expo-font';
 import React from 'react';
 
-export default function Title({ title, user, rightStatus = false }) {
+export default function Title({ title, user}) {
   const [fontsLoaded] = useFonts({
     'CustomFont': require('../../assets/fonts/JacquesFrancois-Regular.ttf'),
   });
@@ -18,7 +18,6 @@ export default function Title({ title, user, rightStatus = false }) {
       >
         {title} {user}
       </Text>
-      {(rightStatus) && <Text>Tümü</Text> }
       </View>
   );
 }

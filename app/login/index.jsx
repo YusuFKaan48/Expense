@@ -5,10 +5,10 @@ import { Alert, Image, Pressable, Text, TextInput, View } from 'react-native';
 import Button from '../../components/Shared/Button';
 import { loginUser } from '../../components/Api/login';
 
-export default function LoginScreen() {
+export default function Index() {
     const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('kaan@mail.com');
+    const [password, setPassword] = useState('123');
     const [isPressed, setIsPressed] = useState(false);
     const [loading, setLoading] = useState(false);
 
