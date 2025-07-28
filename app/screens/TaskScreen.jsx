@@ -20,7 +20,5 @@ export default function TaskScreen() {
         onPress={() => router.replace('/task/createTask')}
        />
       </View>
-
-      
   );
 }

@@ -20,7 +20,7 @@ export default function Index() {
             const token = await loginUser(email, password);
 
             console.log('Token:', token);
-            router.replace('/screens/HomeScreen');
+            router.replace('/screens/Home');
         } catch (error) {
             console.log('Login error:', error);
             console.log('Login error message:', error.message);
@@ -30,8 +30,6 @@ export default function Index() {
             setLoading(false);
         }
     };
-
-
 
     return (
         <View className="flex-1 items-center justify-center bg-[#F3F1EF] px-8">

@@ -3,6 +3,7 @@ import { Check } from 'iconoir-react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { postRequest } from '@/helper/fetch';
+import EventEmitter from '@/helper/EventEmitter';
 
 export default function TaskCard({ id, title, author, startDate, endDate, description, onComplete = () => {} }) {
     const router = useRouter();
@@ -15,7 +16,8 @@ export default function TaskCard({ id, title, author, startDate, endDate, descri
             const response = await postRequest({ url: `tasks/${id}/complete` });
             console.log('Task completed:', response.message);
             setIsCheckPressed(true);
-            await onComplete();  // Burada await kullanarak bekleyebilirsin
+            await onComplete();
+            EventEmitter.emit('taskCompleted');
         } catch (err) {
             console.error(err);
         } finally {

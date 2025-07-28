@@ -6,7 +6,7 @@ import ActiveTasks from '../../components/Main/Task/ActiveTasks';
 import { getRequest } from '@/helper/fetch';
 import Title from "@/components/Shared/Title";
 
-export default function HomeScreen() {
+export default function Home() {
     const [userName, setUserName] = useState('');
     const [loading, setLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState(null);

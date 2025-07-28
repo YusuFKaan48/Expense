@@ -9,7 +9,7 @@ export default function Index() {
     const checkLogin = async () => {
       const token = await AsyncStorage.getItem('userToken');
       if (token) {
-        router.replace('/screens/HomeScreen');
+        router.replace('/screens/Home');
       } else {
         setLoading(false);
       }

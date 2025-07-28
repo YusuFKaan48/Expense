@@ -2,6 +2,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import TaskCard from '../../Shared/Card';
 import { getRequest } from '@/helper/fetch';
+import EventEmitter from "@/helper/EventEmitter";
 
 export default function ActiveTasks() {
   const [tasks, setTasks] = useState([]);
@@ -24,6 +25,14 @@ export default function ActiveTasks() {
 
   useEffect(() => {
     fetchTasks();
+
+    const subscription = EventEmitter.on('taskCompleted', () => {
+      fetchTasks();
+    });
+
+    return () => {
+      subscription.off();
+    };
   }, []);
 
   return (
@@ -44,7 +53,6 @@ export default function ActiveTasks() {
                     startDate={task.start_date}
                     endDate={task.end_date}
                     description={task.description}
-                    onComplete={fetchTasks}
                 />
             ))
         )}
