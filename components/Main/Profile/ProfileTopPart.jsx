@@ -10,10 +10,10 @@ export default function ProfileTopPart() {
     const [errorMsg, setErrorMsg] = useState(null);
 
     async function loadUser() {
-        const api = new ApiService();
-        await api.init();
-
         try {
+            setLoading(true);
+            const api = await ApiService.create();
+
             const user = await api.get('me');
 
             if (user && user.user) {
@@ -46,9 +46,7 @@ export default function ProfileTopPart() {
 
     return (
         <View className="items-center w-full">
-            <Text className="text-[24px] font-jacques font-medium text-black">
-                Profile
-            </Text>
+            <Text className="text-[24px] font-jacques font-medium text-black">Profile</Text>
             <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-4 w-full items-center">
                 <View className="justify-center items-center">
                     <UserCircle width={96} height={86} color="#000" />
@@ -59,4 +57,3 @@ export default function ProfileTopPart() {
         </View>
     );
 }
-

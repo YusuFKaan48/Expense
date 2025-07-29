@@ -12,11 +12,11 @@ export default function TaskCard({ id, title, author, startDate, endDate, descri
     const handleCompleteTask = async () => {
         try {
             setIsSubmitting(true);
-            const api = new ApiService();
-            await api.init();
+            const api = await ApiService.create();
 
             const response = await api.post({ url: `tasks/${id}/complete` });
             console.log('Task completed:', response.message);
+
             await onComplete();
             EventEmitter.emit('taskCompleted');
         } catch (err) {
@@ -28,14 +28,18 @@ export default function TaskCard({ id, title, author, startDate, endDate, descri
 
     return (
         <TouchableOpacity
-            onPress={() => router.push({ pathname: '/task/taskTopTabs', params: { id, title, author, startDate, endDate, description } })}
+            onPress={() =>
+                router.push({ pathname: '/task/taskTopTabs', params: { id, title, author, startDate, endDate, description } })
+            }
         >
             <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-2">
                 <View className="flex-row justify-between items-center">
                     <View>
                         <Text className="text-[18px] font-regular text-black">{title}</Text>
                         <Text className="text-[14px] font-regular text-black mt-1.5">Sent by {author}</Text>
-                        <Text className="text-[12px] font-regular mt-1.5 text-[#717073]">{startDate} - {endDate}</Text>
+                        <Text className="text-[12px] font-regular mt-1.5 text-[#717073]">
+                            {startDate} - {endDate}
+                        </Text>
                     </View>
                     <Pressable
                         onPress={e => {

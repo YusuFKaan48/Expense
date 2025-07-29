@@ -9,10 +9,8 @@ export default function PostTasks() {
   const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
-    const api = new ApiService();
-    await api.init();
-
     try {
+      const api = await ApiService.create();
       setLoading(true);
       const response = await api.get('tasks/my');
       const postTasks = (response.tasks || []).filter(

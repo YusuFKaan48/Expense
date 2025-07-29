@@ -20,11 +20,10 @@ export default function AssignTask({ selectedEmployees, setSelectedEmployees }) 
   };
 
   const fetchUsers = async () => {
-    const api = new ApiService();
-    await api.init();
-
     try {
       setLoading(true);
+      const api = await ApiService.create();
+
       const response = await api.get('users');
       setEmployees(response.users || []);
     } catch (err) {

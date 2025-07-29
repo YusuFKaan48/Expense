@@ -13,10 +13,9 @@ export default function Home() {
 
     useEffect(() => {
         async function loadProfile() {
-            const api = new ApiService();
-            await api.init();
-
             try {
+                const api = await ApiService.create();
+
                 const data = await api.get('me');
 
                 if (data && data.user) {

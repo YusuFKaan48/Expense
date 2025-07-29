@@ -49,10 +49,11 @@ export default function ActivityGraph() {
 
   const fetchData = async () => {
     setLoading(true);
-    const api = new ApiService();
-    await api.init(); // Load token from AsyncStorage
-
     try {
+      // ApiService örneğini create() ile alıyoruz, böylece token yüklü olur
+      const api = await ApiService.create();
+
+      // GET isteği yapıyoruz
       const result = await api.get('work/times');
       console.log('API result:', result);
 

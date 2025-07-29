@@ -9,18 +9,17 @@ export default function ActiveTasks() {
   const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
-    const api = new ApiService();
-    await api.init();
-
     try {
       setLoading(true);
+      const api = await ApiService.create();
+
       const response = await api.get('tasks/my');
       const activeTasks = (response.tasks || []).filter(
           task => task.pivot?.is_completed === 0
       );
       setTasks(activeTasks);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to fetch tasks:', error);
     } finally {
       setLoading(false);
     }

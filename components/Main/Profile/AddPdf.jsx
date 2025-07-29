@@ -21,11 +21,12 @@ export default function AddPdf() {
   };
 
   const fetchUploadedPdfs = async () => {
-    const api = new ApiService();
-    await api.init();
-
+    setLoading(true);
     try {
+      const api = await ApiService.create();
+
       const data = await api.get('user/documents');
+
       if (data?.documents) {
         setUploadedDocuments(data.documents);
         setErrorMsg(null);
@@ -52,9 +53,9 @@ export default function AddPdf() {
         copyToCacheDirectory: true,
       });
 
-      if (result.canceled) return;
+      if (result.type === 'cancel') return;
 
-      const asset = result.assets?.[0];
+      const asset = result;
       if (asset && asset.uri && asset.name) {
         const newFiles = [...selectedFiles, asset];
         setSelectedFiles(newFiles);
@@ -78,10 +79,9 @@ export default function AddPdf() {
       });
     });
 
-    const api = new ApiService();
-    await api.init();
-
     try {
+      const api = await ApiService.create();
+
       const data = await api.post({
         url: 'user/upload-pdfs',
         formData,

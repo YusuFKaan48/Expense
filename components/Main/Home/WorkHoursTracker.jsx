@@ -23,10 +23,9 @@ export default function WorkHoursTracker() {
   };
 
   const startWork = async () => {
-    const api = new ApiService();
-    await api.init();
-
     try {
+      const api = await ApiService.create();
+
       const res = await api.post({ url: 'work/start', parameters: {} });
       if (res?.work_time) {
         setSeconds(0);
@@ -42,10 +41,9 @@ export default function WorkHoursTracker() {
   };
 
   const endWork = async () => {
-    const api = new ApiService();
-    await api.init();
-
     try {
+      const api = await ApiService.create();
+
       const res = await api.post({ url: 'work/end', parameters: {} });
       if (res?.work_time) {
         setRunning(false);
@@ -62,10 +60,9 @@ export default function WorkHoursTracker() {
   };
 
   const checkIfAlreadyWorking = async () => {
-    const api = new ApiService();
-    await api.init();
-
     try {
+      const api = await ApiService.create();
+
       const data = await api.get('work/times');
       const active = data?.work_times?.find(w => w.end_time === null);
       if (active) {

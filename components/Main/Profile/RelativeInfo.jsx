@@ -10,10 +10,10 @@ export default function RelativeInfo() {
   const [errorMsg, setErrorMsg] = useState(null);
 
   async function loadUser() {
-    const api = new ApiService();
-    await api.init();
-
+    setLoading(true);
     try {
+      const api = await ApiService.create();
+
       const user = await api.get('me');
 
       if (user && user.user) {

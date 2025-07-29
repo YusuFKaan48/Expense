@@ -3,43 +3,48 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const apiBaseUrl = "http://192.168.31.61:8000/api/";
 
 export default class ApiService {
-    constructor() {
+    constructor(token) {
         this.baseUrl = apiBaseUrl;
-        this.token = null;
-    }
+        this.token = token;
 
-    async init() {
-        this.token = await AsyncStorage.getItem('userToken');
-    }
-
-    getHeaders(isJson = true) {
-        const headers = {
+        this.headers = {
             Accept: 'application/json',
-            ...(this.token && { Authorization: `Bearer ${this.token}` }),
+            ...(token && { Authorization: `Bearer ${token}` }),
+            'Content-Type': 'application/json',
         };
-        if (isJson) {
-            headers['Content-Type'] = 'application/json';
-        }
-        return headers;
+    }
+
+    static async create() {
+        const token = await AsyncStorage.getItem('userToken');
+        return new ApiService(token);
     }
 
     async get(url) {
-        const headers = this.getHeaders();
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'GET',
-            headers,
+            headers: this.headers,
         });
         return response.json();
     }
 
     async post({ url, parameters, formData }) {
-        const isMultipart = !!formData;
-        const headers = this.getHeaders(!isMultipart);
+        let headers = this.headers;
+        let body = JSON.stringify(parameters);
+
+        if (formData) {
+            headers = {
+                Accept: 'application/json',
+                ...(this.token && { Authorization: `Bearer ${this.token}` }),
+            };
+            body = formData;
+        }
+
         const response = await fetch(`${this.baseUrl}${url}`, {
             method: 'POST',
             headers,
-            body: isMultipart ? formData : JSON.stringify(parameters),
+            body,
         });
+
         return response.json();
     }
 }

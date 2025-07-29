@@ -42,8 +42,7 @@ export default function CreateTask() {
         }
 
         try {
-            const api = new ApiService();
-            await api.init();
+            const api = await ApiService.create();
 
             const response = await api.post({
                 url: 'tasks',

@@ -14,6 +14,7 @@ export default function Id() {
 
   async function loadUserData() {
     try {
+      setLoading(true);
       const userDataString = await AsyncStorage.getItem('userData');
       if (userDataString) {
         const userData = JSON.parse(userDataString);
@@ -22,12 +23,14 @@ export default function Id() {
         } else {
           setIdNumber('No ID Card Saved');
         }
+        setErrorMsg(null);
       } else {
         setIdNumber('No User Data Found');
         setErrorMsg('User data not found.');
       }
     } catch (error) {
       setErrorMsg('Failed to load user data.');
+      setIdNumber('ID Number');
     } finally {
       setLoading(false);
     }
@@ -50,8 +53,7 @@ export default function Id() {
 
       const scannedIdNumber = parsedResult.id_number || 'Not found';
 
-      const api = new ApiService();
-      await api.init();
+      const api = await ApiService.create();
 
       const postResponse = await api.post({
         url: 'id-card',
@@ -72,6 +74,8 @@ export default function Id() {
           let userData = userDataString ? JSON.parse(userDataString) : {};
           userData.id_number = backendIdNumber;
           await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+          setErrorMsg(null);
         } else {
           setErrorMsg('Failed to get updated user data.');
         }
