@@ -33,7 +33,6 @@ const generateWeeksForMonth = (year, month, data) => {
       currentWeek = new Array(7).fill(null);
     }
   }
-
   return weeks;
 };
 
@@ -51,8 +50,6 @@ export default function ActivityGraph() {
     try {
       const api = await ApiService.create();
       const result = await api.get('work/times');
-      console.log('API result:', result);
-
       const entries = Array.isArray(result.work_times) ? result.work_times : [];
 
       const dataObj = {};
@@ -83,33 +80,43 @@ export default function ActivityGraph() {
   );
 
   return (
-      <View className="flex-1 mb-6">
-        <Text className="text-[24px] font-medium text-black mb-4">
+      <View className="flex-1 mb-4">
+        <Text className="text-[24px] font-medium text-black mb-2">
           Activity Graph
         </Text>
 
         <View className="bg-white p-4 rounded-xl shadow-sm">
-          <View className="flex-row ml-14 mb-2">
+
+          <View className="flex-row justify-between ml-14 mb-2 px-2">
             {dayNames.map((day, idx) => (
-                <Text key={idx} className="text-medium text-center" style={{ width: 40 }}>
+                <Text
+                    key={idx}
+                    className="text-center text-md flex-1 font-medium"
+                >
                   {day}
                 </Text>
             ))}
           </View>
 
           {allWeeks.map((week, weekIdx) => (
-              <View key={weekIdx} className="flex-row items-center mb-[6px]">
-                <Text className="text-medium mr-1" style={{ width: 50 }}>
+              <View key={weekIdx} className="flex-row items-center mb-1">
+                <Text className="text-md mr-2" style={{ width: 50 }}>
                   Week {weekIdx + 1}
                 </Text>
 
-                {week.map((entry, dayIdx) => (
-                    <View
-                        key={dayIdx}
-                        className="w-[20px] h-[20px] rounded-sm mr-4 ml-2"
-                        style={{ backgroundColor: getBoxColor(entry?.value) }}
-                    />
-                ))}
+                <View className="flex-row flex-1 justify-between px-2">
+                  {week.map((entry, dayIdx) => (
+                      <View
+                          key={dayIdx}
+                          className="rounded-sm mx-1"
+                          style={{
+                            backgroundColor: getBoxColor(entry?.value),
+                            width: '12%',
+                            aspectRatio: 1,
+                          }}
+                      />
+                  ))}
+                </View>
               </View>
           ))}
         </View>
