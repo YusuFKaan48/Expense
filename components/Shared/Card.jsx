@@ -2,7 +2,6 @@ import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { Check } from 'iconoir-react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import EventEmitter from '@/helper/EventEmitter';
 import ApiService from '@/helper/fetch';
 
 export default function TaskCard({ id, title, author, startDate, endDate, description, completed = false, onComplete = () => {} }) {
@@ -18,7 +17,6 @@ export default function TaskCard({ id, title, author, startDate, endDate, descri
             console.log('Task completed:', response.message);
 
             await onComplete();
-            EventEmitter.emit('taskCompleted');
         } catch (err) {
             console.error(err);
         } finally {

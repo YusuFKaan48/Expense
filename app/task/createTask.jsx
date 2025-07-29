@@ -81,7 +81,7 @@ export default function CreateTask() {
             </View>
 
             <View className="mt-[92px]">
-                <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium text-black">
+                <Text className="text-[24px] font-medium text-black">
                     Task Creator
                 </Text>
             </View>
@@ -98,15 +98,19 @@ export default function CreateTask() {
             </View>
 
             <View className="mt-[24px]">
-                <TaskInfo task={taskTitle} setTask={setTaskTitle} />
+                <TaskInfo
+                    title={taskTitle}
+                    setTitle={setTaskTitle}
+                    description={taskDescription}
+                    setDescription={setTaskDescription}
+                />
             </View>
 
             <View className="mt-[24px]">
-                <TaskInfo task={taskDescription} setTask={setTaskDescription} />
-            </View>
-
-            <View className="mt-[24px]">
-                <AssignTask selectedEmployees={assignedUsers} setSelectedEmployees={setAssignedUsers} />
+                <AssignTask
+                    selectedEmployees={assignedUsers}
+                    setSelectedEmployees={setAssignedUsers}
+                />
             </View>
 
             <Button

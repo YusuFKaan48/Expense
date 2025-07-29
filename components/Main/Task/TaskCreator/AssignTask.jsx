@@ -39,7 +39,7 @@ export default function AssignTask({ selectedEmployees, setSelectedEmployees }) 
 
   return (
       <View>
-        <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium text-black">
+        <Text className="text-[24px] font-medium text-black">
           Assign a task
         </Text>
 
@@ -63,7 +63,6 @@ export default function AssignTask({ selectedEmployees, setSelectedEmployees }) 
           <BlurView intensity={30} tint="light" className="flex-1 justify-center px-5">
             <View className="bg-[#F3F1EF] rounded-xl p-5 max-h-[80%] shadow-sm mx-4">
               <Text
-                  style={{ fontFamily: 'CustomFont' }}
                   className="text-[24px] font-regular text-black text-center mb-3"
               >
                 Select employee

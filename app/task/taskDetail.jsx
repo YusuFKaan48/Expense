@@ -8,7 +8,7 @@ export default function TaskDetail() {
 
     <ScrollView className="flex-1  bg-[#F3F1EF] px-8">
       <View className="mt-[20px]">
-      <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium ">{title}</Text>
+      <Text className="text-[24px] font-medium ">{title}</Text>
       <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-2">
       <Text className="text-[18px] text-black ">{description}</Text>
       <Text className="text-base mb-1 mt-4">Sent by: {author}</Text>

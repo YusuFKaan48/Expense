@@ -3,7 +3,6 @@ import Timer from './Timer';
 import SecondButton from '../../Shared/SecondButton';
 import { Text, View, Alert } from 'react-native';
 import ApiService from '@/helper/fetch';
-import EventEmitter from '@/helper/EventEmitter';
 
 export default function WorkHoursTracker() {
   const [seconds, setSeconds] = useState(0);
@@ -49,7 +48,6 @@ export default function WorkHoursTracker() {
         setRunning(false);
         stopTimer();
         Alert.alert('Success', 'Work session successfully saved.');
-        EventEmitter.emit('workEnded');
       } else {
         Alert.alert('Error', 'Failed to end work session.');
       }
@@ -88,7 +86,7 @@ export default function WorkHoursTracker() {
 
   return (
       <View>
-        <View className="bg-white p-4 rounded-xl shadow-sm flex mb-4 mt-4">
+        <View className="bg-white p-4 rounded-xl shadow-sm flex mb-4">
           <Text className="text-[20px] font-regular text-black">Work Hours Tracker</Text>
 
           <View className="flex-row justify-between items-center mt-4">

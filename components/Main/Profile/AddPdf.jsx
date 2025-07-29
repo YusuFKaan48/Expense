@@ -13,10 +13,8 @@ export default function AddPdf() {
 
   const fileNameFromPath = (path) => {
     if (!path) return 'Unknown';
-
     const fullName = path.split('/').pop();
     const cleanName = fullName.replace(/^\d+_/, '');
-
     return cleanName;
   };
 
@@ -53,9 +51,10 @@ export default function AddPdf() {
         copyToCacheDirectory: true,
       });
 
-      if (result.type === 'cancel') return;
+      console.log('DocumentPicker result:', result);
 
-      const asset = result;
+      if (result.canceled) return;
+      const asset = result.assets && result.assets[0];
       if (asset && asset.uri && asset.name) {
         const newFiles = [...selectedFiles, asset];
         setSelectedFiles(newFiles);
@@ -66,6 +65,8 @@ export default function AddPdf() {
       Alert.alert('Error', 'An error occurred while selecting the file.');
     }
   };
+
+
 
   const uploadFiles = async (files = selectedFiles) => {
     if (files.length === 0) return;

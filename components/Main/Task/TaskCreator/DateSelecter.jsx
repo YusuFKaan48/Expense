@@ -15,7 +15,7 @@ export default function DateSelecter({ selectedStartDate, selectedEndDate, onDat
 
     return (
         <View>
-            <Text style={{ fontFamily: 'CustomFont' }} className="text-[24px] font-medium text-black">
+            <Text className="text-[24px] font-medium text-black">
                 Select a date or date range
             </Text>
 

@@ -4,7 +4,7 @@ import { View, Text, Pressable } from 'react-native';
 export default function WhiteInfoCard({title, value, extra = null, buttonText, onPress, variant = 'basic',}) {
     return (
         <View className="items-center w-full mt-4">
-            <Text className="text-[24px] font-jacques font-medium text-black ">{title}</Text>
+            <Text className="text-[24px] font-medium text-black ">{title}</Text>
 
             <View className="bg-white p-4 rounded-xl shadow-sm mb-2 mt-2 w-full flex-row justify-between items-center">
                 <View className="flex-1">

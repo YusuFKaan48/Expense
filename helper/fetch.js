@@ -6,7 +6,6 @@ export default class ApiService {
     constructor(token) {
         this.baseUrl = apiBaseUrl;
         this.token = token;
-
         this.headers = {
             Accept: 'application/json',
             ...(token && { Authorization: `Bearer ${token}` }),

@@ -1,5 +1,4 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import Button from '../../components/Shared/Button';
 import CurrentTasks from '../../components/Main/Task/CurrentTasks';
@@ -9,9 +8,9 @@ export default function TaskScreen() {
   const router = useRouter();
 
   return (
-    <View className="flex-1 bg-[#F3F1EF]">
+    <View>
      <ScrollView className="bg-[#F3F1EF] pt-[8px] px-[32px]"
-     contentContainerStyle={{ paddingBottom: 170 }}>
+     contentContainerStyle={{ paddingBottom: 100 }}>
      <CurrentTasks />
      <PostTasks />
     </ScrollView>

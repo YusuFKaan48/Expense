@@ -2,7 +2,6 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import TaskCard from '../../Shared/Card';
 import ApiService from '@/helper/fetch';
-import EventEmitter from '@/helper/EventEmitter';
 
 export default function ActiveTasks() {
   const [tasks, setTasks] = useState([]);
@@ -27,19 +26,11 @@ export default function ActiveTasks() {
 
   useEffect(() => {
     fetchTasks();
-
-    const subscription = EventEmitter.on('taskCompleted', () => {
-      fetchTasks();
-    });
-
-    return () => {
-      subscription.off();
-    };
   }, []);
 
   return (
       <View>
-        <Text className="text-[24px] font-jacques font-medium text-black mb-4">
+        <Text className="text-[24px] font-medium text-black mb-2">
           Active Tasks
         </Text>
 
@@ -55,6 +46,7 @@ export default function ActiveTasks() {
                     startDate={task.start_date}
                     endDate={task.end_date}
                     description={task.description}
+                    onComplete={fetchTasks}
                 />
             ))
         )}

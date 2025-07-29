@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import ApiService from '@/helper/fetch'; // ApiService import
-import EventEmitter from '@/helper/EventEmitter';
+import ApiService from '@/helper/fetch';
 
 const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -50,10 +49,7 @@ export default function ActivityGraph() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // ApiService örneğini create() ile alıyoruz, böylece token yüklü olur
       const api = await ApiService.create();
-
-      // GET isteği yapıyoruz
       const result = await api.get('work/times');
       console.log('API result:', result);
 
@@ -78,14 +74,6 @@ export default function ActivityGraph() {
 
   useEffect(() => {
     fetchData();
-
-    const subscription = EventEmitter.on('workEnded', () => {
-      fetchData();
-    });
-
-    return () => {
-      subscription.off();
-    };
   }, []);
 
   if (loading) return <ActivityIndicator size="large" />;
@@ -95,8 +83,8 @@ export default function ActivityGraph() {
   );
 
   return (
-      <View className="flex-1 mb-4">
-        <Text className="text-[24px] font-jacques font-medium text-black mb-4">
+      <View className="flex-1 mb-6">
+        <Text className="text-[24px] font-medium text-black mb-4">
           Activity Graph
         </Text>
 
