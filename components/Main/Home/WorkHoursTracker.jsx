@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Timer from './Timer';
 import SecondButton from '../../Shared/SecondButton';
 import { Text, View, Alert } from 'react-native';
-import { postRequest, getRequest } from '@/helper/fetch';
+import ApiService from '@/helper/fetch';
 import EventEmitter from '@/helper/EventEmitter';
 
 export default function WorkHoursTracker() {
@@ -23,8 +23,11 @@ export default function WorkHoursTracker() {
   };
 
   const startWork = async () => {
+    const api = new ApiService();
+    await api.init();
+
     try {
-      const res = await postRequest({ url: 'work/start', parameters: {} });
+      const res = await api.post({ url: 'work/start', parameters: {} });
       if (res?.work_time) {
         setSeconds(0);
         setRunning(true);
@@ -39,8 +42,11 @@ export default function WorkHoursTracker() {
   };
 
   const endWork = async () => {
+    const api = new ApiService();
+    await api.init();
+
     try {
-      const res = await postRequest({ url: 'work/end', parameters: {} });
+      const res = await api.post({ url: 'work/end', parameters: {} });
       if (res?.work_time) {
         setRunning(false);
         stopTimer();
@@ -56,8 +62,11 @@ export default function WorkHoursTracker() {
   };
 
   const checkIfAlreadyWorking = async () => {
+    const api = new ApiService();
+    await api.init();
+
     try {
-      const data = await getRequest('work/times');
+      const data = await api.get('work/times');
       const active = data?.work_times?.find(w => w.end_time === null);
       if (active) {
         const start = new Date(active.start_time).getTime();

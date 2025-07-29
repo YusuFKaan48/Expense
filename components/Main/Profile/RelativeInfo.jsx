@@ -1,8 +1,8 @@
 import { Text, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getRequest } from '@/helper/fetch';
 import WhiteInfoCard from '@/components/Main/Profile/WhiteInfoCard';
+import ApiService from '@/helper/fetch';
 
 export default function RelativeInfo() {
   const [relative, setRelative] = useState(null);
@@ -10,21 +10,27 @@ export default function RelativeInfo() {
   const [errorMsg, setErrorMsg] = useState(null);
 
   async function loadUser() {
+    const api = new ApiService();
+    await api.init();
+
     try {
-      const user = await getRequest('me');
+      const user = await api.get('me');
 
       if (user && user.user) {
         await AsyncStorage.setItem('userData', JSON.stringify(user.user));
 
         setRelative({
-          relative: user.relative.RelativeName || '-',
-          relativeNumber: user.relative.RelativeNumber || '-',
+          relative: user.relative?.RelativeName || '-',
+          relativeNumber: user.relative?.RelativeNumber || '-',
         });
+        setErrorMsg(null);
       } else {
         setErrorMsg('User information not found.');
+        setRelative(null);
       }
     } catch (error) {
       setErrorMsg('An error occurred while loading data.');
+      setRelative(null);
     } finally {
       setLoading(false);
     }

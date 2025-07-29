@@ -1,11 +1,12 @@
-import { postRequest } from '../../helper/fetch';
-import { getRequest } from '../../helper/fetch';
-
+import ApiService from '@/helper/fetch';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function loginUser(email, password) {
     try {
-        const data = await postRequest({
+        const api = new ApiService();
+        await api.init();
+
+        const data = await api.post({
             url: 'login',
             parameters: { email, password },
         });
@@ -14,7 +15,7 @@ export async function loginUser(email, password) {
 
         await AsyncStorage.setItem('userToken', data.token);
 
-        const user = await getRequest('me');
+        const user = await api.get('me');
         await AsyncStorage.setItem('userData', JSON.stringify(user));
 
         return data.token;

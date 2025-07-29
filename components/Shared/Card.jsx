@@ -2,8 +2,8 @@ import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { Check } from 'iconoir-react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { postRequest } from '@/helper/fetch';
 import EventEmitter from '@/helper/EventEmitter';
+import ApiService from '@/helper/fetch';
 
 export default function TaskCard({ id, title, author, startDate, endDate, description, completed = false, onComplete = () => {} }) {
     const router = useRouter();
@@ -12,7 +12,10 @@ export default function TaskCard({ id, title, author, startDate, endDate, descri
     const handleCompleteTask = async () => {
         try {
             setIsSubmitting(true);
-            const response = await postRequest({ url: `tasks/${id}/complete` });
+            const api = new ApiService();
+            await api.init();
+
+            const response = await api.post({ url: `tasks/${id}/complete` });
             console.log('Task completed:', response.message);
             await onComplete();
             EventEmitter.emit('taskCompleted');
@@ -37,7 +40,7 @@ export default function TaskCard({ id, title, author, startDate, endDate, descri
                     <Pressable
                         onPress={e => {
                             e.stopPropagation();
-                            if (!isSubmitting && !completed) handleCompleteTask(); // tamamlandıysa disable et
+                            if (!isSubmitting && !completed) handleCompleteTask();
                         }}
                         className={`w-10 h-10 rounded-full items-center justify-center ${completed ? 'bg-[#004030]' : 'bg-[#F3F1EF]'}`}
                     >

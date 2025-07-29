@@ -1,8 +1,8 @@
 import * as DocumentPicker from 'expo-document-picker';
 import React, { useEffect, useState } from 'react';
 import { Alert, Text, ScrollView, ActivityIndicator } from 'react-native';
-import {getRequest, postMultipartRequest, postRequest} from '@/helper/fetch';
 import WhiteInfoCard from './WhiteInfoCard';
+import ApiService from '@/helper/fetch';
 import { StatusBar } from 'expo-status-bar';
 
 export default function AddPdf() {
@@ -20,10 +20,12 @@ export default function AddPdf() {
     return cleanName;
   };
 
-
   const fetchUploadedPdfs = async () => {
+    const api = new ApiService();
+    await api.init();
+
     try {
-      const data = await getRequest('user/documents');
+      const data = await api.get('user/documents');
       if (data?.documents) {
         setUploadedDocuments(data.documents);
         setErrorMsg(null);
@@ -68,7 +70,6 @@ export default function AddPdf() {
     if (files.length === 0) return;
 
     const formData = new FormData();
-
     files.forEach((file, index) => {
       formData.append(`documents[${index}]`, {
         uri: file.uri,
@@ -77,8 +78,11 @@ export default function AddPdf() {
       });
     });
 
+    const api = new ApiService();
+    await api.init();
+
     try {
-      const data = await postRequest({
+      const data = await api.post({
         url: 'user/upload-pdfs',
         formData,
       });
@@ -96,7 +100,7 @@ export default function AddPdf() {
     }
   };
 
-  if (loading) return <ActivityIndicator size="large"/>;
+  if (loading) return <ActivityIndicator size="large" />;
   if (errorMsg) return <Text>{errorMsg}</Text>;
 
   return (
@@ -105,10 +109,9 @@ export default function AddPdf() {
             title="Add Files"
             value={
               uploadedDocuments.length === 0
-                  ? 'No file uploaded yet.'
+                  ? 'No files uploaded yet.'
                   : uploadedDocuments.map(doc => fileNameFromPath(doc.file_path)).join(', ')
             }
-
             variant="withButton"
             buttonText="Add PDF"
             onPress={pickDocument}

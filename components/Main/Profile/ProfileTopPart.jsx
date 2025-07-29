@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { UserCircle } from 'iconoir-react-native';
 import { Text, View, ActivityIndicator } from 'react-native';
-import { getRequest } from '../../../helper/fetch';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiService from '../../../helper/fetch';
 
 export default function ProfileTopPart() {
     const [profile, setProfile] = useState(null);
@@ -10,8 +10,11 @@ export default function ProfileTopPart() {
     const [errorMsg, setErrorMsg] = useState(null);
 
     async function loadUser() {
+        const api = new ApiService();
+        await api.init();
+
         try {
-            const user = await getRequest('me');
+            const user = await api.get('me');
 
             if (user && user.user) {
                 await AsyncStorage.setItem('userData', JSON.stringify(user.user));
@@ -20,11 +23,14 @@ export default function ProfileTopPart() {
                     name: user.user.name,
                     jobTitleName: user.jobTitleName || '-',
                 });
+                setErrorMsg(null);
             } else {
                 setErrorMsg('User information not found.');
+                setProfile(null);
             }
         } catch (error) {
             setErrorMsg('An error occurred while loading data.');
+            setProfile(null);
         } finally {
             setLoading(false);
         }
@@ -40,14 +46,14 @@ export default function ProfileTopPart() {
 
     return (
         <View className="items-center w-full">
-            <Text className="text-[24px] font-jacques font-medium text-black ">
+            <Text className="text-[24px] font-jacques font-medium text-black">
                 Profile
             </Text>
             <View className="bg-white p-4 rounded-xl shadow-sm flex mb-2 mt-4 w-full items-center">
                 <View className="justify-center items-center">
                     <UserCircle width={96} height={86} color="#000" />
                     <Text className="text-[20px] font-regular text-black mt-1.5">{profile.name}</Text>
-                    <Text className="text-[14px] font-regular  mt-1">{profile.jobTitleName}</Text>
+                    <Text className="text-[14px] font-regular mt-1">{profile.jobTitleName}</Text>
                 </View>
             </View>
         </View>

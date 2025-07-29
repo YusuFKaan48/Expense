@@ -7,7 +7,7 @@ import ProfileBottomPart from "@/components/Main/Profile/ProfileBottomPart";
 export default function Profile() {
   return (
       <>
-        <ScrollView className="flex-1 bg-[#F3F1EF] pt-[64px] px-[32px] ">
+        <ScrollView className="flex-1 bg-[#F3F1EF] pt-[8px] px-[32px] ">
           <View className="bg-[#F3F1EF] items-center">
             <ProfileTopPart />
             <ProfileBottomPart />

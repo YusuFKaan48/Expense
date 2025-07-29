@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Modal, Text } from 'react-native';
+import { ActivityIndicator, Modal, Text, Alert } from 'react-native';
 import MRZScanner from '@/helper/MRZScanner';
-import { postRequest, getRequest } from '@/helper/fetch';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WhiteInfoCard from './WhiteInfoCard';
+import ApiService from '@/helper/fetch';
 
 export default function Id() {
   const [scanning, setScanning] = useState(false);
@@ -50,7 +50,10 @@ export default function Id() {
 
       const scannedIdNumber = parsedResult.id_number || 'Not found';
 
-      const postResponse = await postRequest({
+      const api = new ApiService();
+      await api.init();
+
+      const postResponse = await api.post({
         url: 'id-card',
         parameters: { id_number: scannedIdNumber },
       });
@@ -58,7 +61,7 @@ export default function Id() {
       if (postResponse && postResponse.message) {
         console.log('Successfully saved ID card:', postResponse.message);
 
-        const userResponse = await getRequest('me');
+        const userResponse = await api.get('me');
 
         if (userResponse && userResponse.user && userResponse.user.id_number) {
           const backendIdNumber = userResponse.user.id_number;
@@ -78,6 +81,7 @@ export default function Id() {
     } catch (error) {
       console.error(error);
       setErrorMsg('An error occurred while processing data.');
+      Alert.alert('Error', 'An error occurred while processing data.');
     } finally {
       setLoading(false);
       setScanning(false);

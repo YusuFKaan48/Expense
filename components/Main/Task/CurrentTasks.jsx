@@ -1,7 +1,7 @@
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import TaskCard from '../../Shared/Card';
-import { getRequest } from '@/helper/fetch';
+import ApiService from '@/helper/fetch';
 import EventEmitter from '@/helper/EventEmitter';
 
 export default function CurrentTasks() {
@@ -9,9 +9,12 @@ export default function CurrentTasks() {
   const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
+    const api = new ApiService();
+    await api.init();
+
     try {
       setLoading(true);
-      const response = await getRequest('tasks/my');
+      const response = await api.get('tasks/my');
       const activeTasks = (response.tasks || []).filter(
           task => task.pivot?.is_completed === 0
       );
@@ -44,7 +47,7 @@ export default function CurrentTasks() {
         {loading ? (
             <ActivityIndicator size="large" color="#004030" />
         ) : (
-            tasks.map((task) => (
+            tasks.map(task => (
                 <TaskCard
                     key={task.id}
                     id={task.id}

@@ -10,7 +10,7 @@ export default function TaskScreen() {
 
   return (
     <View className="flex-1 bg-[#F3F1EF]">
-     <ScrollView className="bg-[#F3F1EF] pt-[64px] px-[32px]"
+     <ScrollView className="bg-[#F3F1EF] pt-[8px] px-[32px]"
      contentContainerStyle={{ paddingBottom: 170 }}>
      <CurrentTasks />
      <PostTasks />

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, Modal, Pressable, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Check } from 'iconoir-react-native';
-import { getRequest } from '@/helper/fetch';
+import ApiService from '@/helper/fetch';
 
 export default function AssignTask({ selectedEmployees, setSelectedEmployees }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -18,16 +18,22 @@ export default function AssignTask({ selectedEmployees, setSelectedEmployees }) 
       setSelectedEmployees([...selectedEmployees, id]);
     }
   };
-    const fetchUsers = async () => {
-      try {
-        const response = await getRequest('users');
-        setEmployees(response.users || []);
-      } catch (err) {
-        console.error('Error fetching users:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+
+  const fetchUsers = async () => {
+    const api = new ApiService();
+    await api.init();
+
+    try {
+      setLoading(true);
+      const response = await api.get('users');
+      setEmployees(response.users || []);
+    } catch (err) {
+      console.error('Error fetching users:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, []);

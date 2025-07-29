@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text } from 'react-native';
 import WorkHoursTracker from '../../components/Main/Home/WorkHoursTracker';
 import Activedays from '../../components/Main/Home/Activedays';
 import ActiveTasks from '../../components/Main/Task/ActiveTasks';
-import { getRequest } from '@/helper/fetch';
-import Title from "@/components/Shared/Title";
+
+import ApiService from '@/helper/fetch';
 
 export default function Home() {
     const [userName, setUserName] = useState('');
@@ -13,8 +13,11 @@ export default function Home() {
 
     useEffect(() => {
         async function loadProfile() {
+            const api = new ApiService();
+            await api.init();
+
             try {
-                const data = await getRequest('me');
+                const data = await api.get('me');
 
                 if (data && data.user) {
                     setUserName(data.user.name || null);
@@ -32,12 +35,12 @@ export default function Home() {
         loadProfile();
     }, []);
 
-    if (loading) return <ActivityIndicator style={{ marginTop: 20 }} />;
+    if (loading) return <ActivityIndicator className="mt-1" />;
     if (errorMsg) return <Text>{errorMsg}</Text>;
-    if (!userName) return <Text>Kullanıcı bilgisi bulunamadı.</Text>;
+    if (!userName) return <Text>User information not found.</Text>;
 
     return (
-        <ScrollView style={{ backgroundColor: '#F3F1EF', paddingTop: 64, paddingHorizontal: 32 }}>
+        <ScrollView className="bg-[#F3F1EF] pt-[8px] px-[32px]">
             <Text className="text-[24px] font-jacques font-medium text-black">Hey {userName}!</Text>
             <WorkHoursTracker />
             <Activedays />

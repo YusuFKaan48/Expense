@@ -6,7 +6,7 @@ import DateSelecter from '../../components/Main/Task/TaskCreator/DateSelecter';
 import TaskInfo from '../../components/Main/Task/TaskCreator/TaskInfo';
 import AssignTask from '../../components/Main/Task/TaskCreator/AssignTask';
 import Button from '../../components/Shared/Button';
-import { postRequest } from '@/helper/fetch';
+import ApiService from '@/helper/fetch';
 
 export default function CreateTask() {
     const router = useRouter();
@@ -17,9 +17,15 @@ export default function CreateTask() {
     const [assignedUsers, setAssignedUsers] = useState([]);
     const [isCreatePressed, setIsCreatePressed] = useState(false);
 
+    const formatDate = (date) => {
+        if (!date) return null;
+        const d = new Date(date);
+        return d.toISOString().split('T')[0];
+    };
+
     const handleCreateTask = async () => {
         if (!taskTitle.trim()) {
-            Alert.alert('Error', 'Please enter the task description.');
+            Alert.alert('Error', 'Please enter the task title.');
             return;
         }
         if (!taskDescription.trim()) {
@@ -36,25 +42,34 @@ export default function CreateTask() {
         }
 
         try {
-            const response = await postRequest({
+            const api = new ApiService();
+            await api.init();
+
+            const response = await api.post({
                 url: 'tasks',
                 parameters: {
                     title: taskTitle,
                     description: taskDescription,
-                    start_date: startDate,
-                    end_date: endDate,
+                    start_date: formatDate(startDate),
+                    end_date: formatDate(endDate),
                     user_ids: assignedUsers,
                 },
             });
 
+            console.log('Create Task Response:', response);
+
             if (response.message) {
                 Alert.alert('Success', response.message);
                 router.replace('/screens/TaskScreen');
+            } else if (response.errors) {
+                const firstError = Object.values(response.errors)[0];
+                Alert.alert('Validation Error', firstError?.toString() || 'Invalid data.');
             } else {
                 Alert.alert('Error', 'Task could not be created.');
             }
         } catch (error) {
             Alert.alert('Server Error', 'An error occurred while creating the task.');
+            console.error('Create task error:', error);
         }
     };
 
@@ -85,7 +100,6 @@ export default function CreateTask() {
 
             <View className="mt-[24px]">
                 <TaskInfo task={taskTitle} setTask={setTaskTitle} />
-
             </View>
 
             <View className="mt-[24px]">
@@ -93,10 +107,7 @@ export default function CreateTask() {
             </View>
 
             <View className="mt-[24px]">
-                <AssignTask
-                    selectedEmployees={assignedUsers}
-                    setSelectedEmployees={setAssignedUsers}
-                />
+                <AssignTask selectedEmployees={assignedUsers} setSelectedEmployees={setAssignedUsers} />
             </View>
 
             <Button

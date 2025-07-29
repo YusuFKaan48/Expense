@@ -2,39 +2,44 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const apiBaseUrl = "http://192.168.31.61:8000/api/";
 
-const getToken = async () => {
-    return await AsyncStorage.getItem('userToken');
-};
-
-const getHeaders = async (isJson = true) => {
-    const token = await getToken();
-    const headers = {
-        Accept: 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-    };
-    if (isJson) {
-        headers['Content-Type'] = 'application/json';
+export default class ApiService {
+    constructor() {
+        this.baseUrl = apiBaseUrl;
+        this.token = null;
     }
-    return headers;
-};
 
-export const getRequest = async (url) => {
-    const headers = await getHeaders();
-    const response = await fetch(`${apiBaseUrl}${url}`, {
-        method: 'GET',
-        headers,
-    });
-    return response.json();
-};
+    async init() {
+        this.token = await AsyncStorage.getItem('userToken');
+    }
 
-export const postRequest = async ({ url, parameters, formData }) => {
-    const isMultipart = !!formData;
-    const headers = await getHeaders(!isMultipart);
-    const response = await fetch(`${apiBaseUrl}${url}`, {
-        method: 'POST',
-        headers,
-        body: isMultipart ? formData : JSON.stringify(parameters),
-    });
-    return response.json();
-};
+    getHeaders(isJson = true) {
+        const headers = {
+            Accept: 'application/json',
+            ...(this.token && { Authorization: `Bearer ${this.token}` }),
+        };
+        if (isJson) {
+            headers['Content-Type'] = 'application/json';
+        }
+        return headers;
+    }
 
+    async get(url) {
+        const headers = this.getHeaders();
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: 'GET',
+            headers,
+        });
+        return response.json();
+    }
+
+    async post({ url, parameters, formData }) {
+        const isMultipart = !!formData;
+        const headers = this.getHeaders(!isMultipart);
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: 'POST',
+            headers,
+            body: isMultipart ? formData : JSON.stringify(parameters),
+        });
+        return response.json();
+    }
+}

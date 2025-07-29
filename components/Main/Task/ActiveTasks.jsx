@@ -1,17 +1,20 @@
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import TaskCard from '../../Shared/Card';
-import { getRequest } from '@/helper/fetch';
-import EventEmitter from "@/helper/EventEmitter";
+import ApiService from '@/helper/fetch';
+import EventEmitter from '@/helper/EventEmitter';
 
 export default function ActiveTasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
+    const api = new ApiService();
+    await api.init();
+
     try {
       setLoading(true);
-      const response = await getRequest('tasks/my');
+      const response = await api.get('tasks/my');
       const activeTasks = (response.tasks || []).filter(
           task => task.pivot?.is_completed === 0
       );
@@ -59,4 +62,3 @@ export default function ActiveTasks() {
       </View>
   );
 }
-
