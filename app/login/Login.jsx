@@ -5,7 +5,7 @@ import { Alert, Image, Pressable, Text, TextInput, View } from 'react-native';
 import Button from '../../components/Shared/Button';
 import { loginUser } from '../../components/Api/login';
 
-export default function Index() {
+export default function Login() {
     const router = useRouter();
     const [email, setEmail] = useState('kaan@mail.com');
     const [password, setPassword] = useState('123');
