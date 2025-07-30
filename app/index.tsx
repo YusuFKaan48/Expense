@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import WelcomeScreen from './welcome/welcomeScreen';
+import IndexScreen from "./welcome/IndexScreen";
 export default function Index() {
+
   const router = useRouter();
   const [loading, setLoading] = useState(true);
     const checkLogin = async () => {
@@ -20,5 +21,5 @@ export default function Index() {
 
   if (loading) return null;
 
-  return <WelcomeScreen />;
+  return <IndexScreen />;
 }
