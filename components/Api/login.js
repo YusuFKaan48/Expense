@@ -3,23 +3,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function loginUser(email, password) {
     try {
-        const api = new ApiService();
+        const tempApi = new ApiService(null);
 
-        const loginResponse = await api.post({
+        const loginResponse = await tempApi.post({
             url: 'login',
             parameters: {email, password},
         });
-        console.log('loginResponse raw:', loginResponse);
 
+        console.log('loginResponse raw:', loginResponse);
 
         const token = loginResponse?.token;
         if (!token) throw new Error('Login failed: Token not received');
 
         await AsyncStorage.setItem('userToken', token);
 
-        const authorizedApi = await ApiService.create();
+        ApiService.clearInstance();
+        const api = await ApiService.getInstance();
 
-        const userResponse = await authorizedApi.get('me');
+        const userResponse = await api.get('me');
 
         if (userResponse?.user) {
             await AsyncStorage.setItem('userData', JSON.stringify(userResponse.user));

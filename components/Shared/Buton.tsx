@@ -3,11 +3,12 @@ import React from 'react';
 
 type ButtonProps = {
     label: string;
-    color: string;
     onPress: () => void;
+    color?: string;
+    disabled?: boolean;
 };
 
-export default function Button({ label ,color, onPress }: ButtonProps) {
+export default function Button({ label ,color, onPress , disabled}: ButtonProps) {
     return (
         <Pressable
             onPress={onPress}

@@ -1,28 +1,29 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, Pressable} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Pressable, Platform } from 'react-native';
 import Button from '@/components/Shared/Buton';
 import CategoryScroll from '@/components/Shared/CategoryScroll';
+import { Picker } from '@react-native-picker/picker';
 
 export default function NumPad() {
     const [input, setInput] = useState('');
-    const [selection, setSelection] = useState({start: 0, end: 0});
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selection, setSelection] = useState({ start: 0, end: 0 });
+    const [selectedCategory, setSelectedCategory] = useState<{ emoji: string; name: string } | null>(null);
+    const [currency, setCurrency] = useState('₺');
+    const [showPicker, setShowPicker] = useState(false);
 
     const handlePress = (val: string) => {
         if (val === '⌫') {
             if (selection.start > 0) {
-                const newText =
-                    input.slice(0, selection.start - 1) + input.slice(selection.end);
+                const newText = input.slice(0, selection.start - 1) + input.slice(selection.end);
                 const newPos = selection.start - 1;
                 setInput(newText);
-                setSelection({start: newPos, end: newPos});
+                setSelection({ start: newPos, end: newPos });
             }
         } else {
-            const newText =
-                input.slice(0, selection.start) + val + input.slice(selection.end);
+            const newText = input.slice(0, selection.start) + val + input.slice(selection.end);
             const newPos = selection.start + val.length;
             setInput(newText);
-            setSelection({start: newPos, end: newPos});
+            setSelection({ start: newPos, end: newPos });
         }
     };
 
@@ -42,7 +43,7 @@ export default function NumPad() {
     return (
         <View className="flex justify-between flex-1">
             <View className="flex flex-col gap-2 justify-center items-center flex-1">
-                <View className="flex flex-row justify-center items-center ">
+                <View className="flex flex-row justify-center items-center">
                     <TextInput
                         className="text-6xl font-light text-right text-gray-800 min-h-18"
                         value={input}
@@ -53,64 +54,84 @@ export default function NumPad() {
                         placeholderTextColor={"#ddd"}
                         keyboardType="numeric"
                     />
-                    <Text className="text-6xl text-[#ddd] min-h-14">₺</Text>
+                    <Pressable onPress={() => setShowPicker(!showPicker)}>
+                        <Text className="text-6xl text-[#ddd] min-h-14">{currency}</Text>
+                    </Pressable>
                 </View>
 
+                {showPicker && (
+                    <Picker
+                        selectedValue={currency}
+                        onValueChange={(value) => {
+                            setCurrency(value);
+                            setShowPicker(false);
+                        }}
+                        style={{
+                            width: 150,
+                            height: Platform.OS === 'ios' ? 200 : 50,
+                        }}
+                        mode="dropdown"
+                    >
+                        {['₺', '$', '€', '£', '¥'].map((symbol) => (
+                            <Picker.Item key={symbol} label={symbol} value={symbol} />
+                        ))}
+                    </Picker>
+                )}
+
                 {selectedCategory && (
-                    <Text className="text-base text-gray-500">{selectedCategory}</Text>
+                    <Text className="text-base text-gray-500">{selectedCategory.name}</Text>
                 )}
             </View>
 
             <View>
                 <CategoryScroll
-                    onSelect={(name) => setSelectedCategory(name)}
-                    selectedCategory={selectedCategory}
+                    onSelect={(category) => setSelectedCategory(category)}
+                    selectedCategory={selectedCategory?.emoji ?? null}
                 />
 
-                <View className='gap-4'>
+                <View className="gap-4">
+                    <View className="flex-row gap-4">
+                        <View className="flex-[3] gap-4">
+                            {grid.map((row, rowIndex) => (
+                                <View key={rowIndex} className="flex-row justify-between gap-4">
+                                    {row.map((item) => (
+                                        <Pressable
+                                            key={item}
+                                            onPress={() => handlePress(item)}
+                                            className="flex-1 py-5 rounded-xl items-center bg-gray-300"
+                                        >
+                                            <Text className="text-2xl text-black">{item}</Text>
+                                        </Pressable>
+                                    ))}
+                                </View>
+                            ))}
+                        </View>
 
-                <View className="flex-row gap-4">
-                    <View className="flex-[3] gap-4">
-                        {grid.map((row, rowIndex) => (
-                            <View key={rowIndex} className="flex-row justify-between gap-4">
-                                {row.map((item) => (
-                                    <Pressable
-                                        key={item}
-                                        onPress={() => handlePress(item)}
-                                        className="flex-1 py-5 rounded-xl items-center bg-gray-300"
-                                    >
-                                        <Text className="text-2xl text-black">{item}</Text>
-                                    </Pressable>
-                                ))}
-                            </View>
-                        ))}
+                        <View className="flex-1 justify-between w-full">
+                            {sideButtons.map((item, i) => (
+                                <Pressable
+                                    key={i}
+                                    onPress={() => handlePress(item)}
+                                    className="rounded-xl items-center justify-center bg-gray-300 py-5"
+                                >
+                                    <Text className="text-2xl text-black">{item}</Text>
+                                </Pressable>
+                            ))}
+                        </View>
                     </View>
 
-                    <View className="flex-1 justify-between w-full ">
-                        {sideButtons.map((item, i) => (
-                            <Pressable
-                                key={i}
-                                onPress={() => handlePress(item)}
-                                className="rounded-xl items-center justify-center bg-gray-300 py-5"
-                            >
-                                <Text className="text-2xl text-black">{item}</Text>
-                            </Pressable>
-                        ))}
+                    <View className="flex-row gap-4">
+                        <Button
+                            label="Gelir"
+                            color="bg-green-500"
+                            onPress={() => alert('Gelir')}
+                        />
+                        <Button
+                            label="Gider"
+                            color="bg-red-500"
+                            onPress={() => alert('Gider')}
+                        />
                     </View>
-                </View>
-
-                <View className="flex-row gap-4">
-                    <Button
-                        label="Gelir"
-                        color="bg-green-500"
-                        onPress={() => alert('Gelir')}
-                    />
-                    <Button
-                        label="Gider"
-                        color="bg-red-500"
-                        onPress={() => alert('Gider')}
-                    />
-                </View>
                 </View>
             </View>
         </View>

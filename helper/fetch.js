@@ -1,55 +1,61 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiBaseUrl = "http://192.168.31.61:8000/api/";
+const API_BASE_URL = 'http://192.168.31.61:8000/api/';
 
-export default class ApiService {
-    constructor(token) {
-        this.baseUrl = apiBaseUrl;
-        this.token = token;
-        this.headers = {
-            Accept: 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-            'Content-Type': 'application/json',
-        };
+class ApiService {
+    static instance = null;
+
+    static async getInstance() {
+        if (!ApiService.instance) {
+            const token = await AsyncStorage.getItem('userToken');
+            ApiService.instance = new ApiService(token);
+        }
+        return ApiService.instance;
     }
 
-    static async create() {
-        const token = await AsyncStorage.getItem('userToken');
-        return new ApiService(token);
+    constructor(token) {
+        if (ApiService.instance) {
+            throw new Error('Use ApiService.getInstance() instead of new.');
+        }
+        this.token = token;
+    }
+
+    getHeaders(isForm = false) {
+        const headers = {
+            Accept: 'application/json',
+            ...(this.token && {Authorization: `Bearer ${this.token}`}),
+        };
+
+        if (!isForm) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        return headers;
     }
 
     async get(url) {
-        console.log('Headers in get:', this.headers);
-        const response = await fetch(`${this.baseUrl}${url}`, {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
             method: 'GET',
-            headers: this.headers,
+            headers: this.getHeaders(),
         });
-
-        const responseJson = await response.json();
-        console.log(`GET ${url} response:`, responseJson);
-
-        return responseJson;
+        return response.json();
     }
 
+    async post({url, parameters, formData}) {
+        const headers = this.getHeaders(!!formData);
+        const body = formData ? formData : JSON.stringify(parameters);
 
-    async post({ url, parameters, formData }) {
-        let headers = this.headers;
-        let body = JSON.stringify(parameters);
-
-        if (formData) {
-            headers = {
-                Accept: 'application/json',
-                ...(this.token && { Authorization: `Bearer ${this.token}` }),
-            };
-            body = formData;
-        }
-
-        const response = await fetch(`${this.baseUrl}${url}`, {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
             method: 'POST',
             headers,
             body,
         });
-
         return response.json();
     }
+
+    static clearInstance() {
+        ApiService.instance = null;
+    }
 }
+
+export default ApiService;
