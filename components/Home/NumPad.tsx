@@ -67,16 +67,17 @@ export default function NumPad() {
                     selectedCategory={selectedCategory}
                 />
 
+                <View className='gap-4'>
 
-                <View className="flex-row mb-4">
-                    <View className="flex-[3]">
+                <View className="flex-row gap-4">
+                    <View className="flex-[3] gap-4">
                         {grid.map((row, rowIndex) => (
-                            <View key={rowIndex} className="flex-row justify-between mb-4">
+                            <View key={rowIndex} className="flex-row justify-between gap-4">
                                 {row.map((item) => (
                                     <Pressable
                                         key={item}
                                         onPress={() => handlePress(item)}
-                                        className="flex-1 mx-1 py-5 rounded-xl items-center bg-gray-300"
+                                        className="flex-1 py-5 rounded-xl items-center bg-gray-300"
                                     >
                                         <Text className="text-2xl text-black">{item}</Text>
                                     </Pressable>
@@ -85,12 +86,12 @@ export default function NumPad() {
                         ))}
                     </View>
 
-                    <View className="flex-1 justify-between ml-2 w-full">
+                    <View className="flex-1 justify-between w-full ">
                         {sideButtons.map((item, i) => (
                             <Pressable
                                 key={i}
                                 onPress={() => handlePress(item)}
-                                className="rounded-xl items-center justify-center mb-4 bg-gray-300 py-5"
+                                className="rounded-xl items-center justify-center bg-gray-300 py-5"
                             >
                                 <Text className="text-2xl text-black">{item}</Text>
                             </Pressable>
@@ -98,7 +99,7 @@ export default function NumPad() {
                     </View>
                 </View>
 
-                <View className="flex-row gap-2 mb-4">
+                <View className="flex-row gap-4">
                     <Button
                         label="Gelir"
                         color="bg-green-500"
@@ -109,6 +110,7 @@ export default function NumPad() {
                         color="bg-red-500"
                         onPress={() => alert('Gider')}
                     />
+                </View>
                 </View>
             </View>
         </View>

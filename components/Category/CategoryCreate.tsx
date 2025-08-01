@@ -8,7 +8,7 @@ export default function CategoryCreate() {
     const [selectedCategory, setSelectedCategory] = useState('');
 
     return (
-        <View className=" flex-1 bg-white ">
+        <View className=" flex-1 bg-white">
 
             <Text className="text-[24px]">Emoji seçin</Text>
 
@@ -17,21 +17,25 @@ export default function CategoryCreate() {
                 selectedCategory={selectedCategory}
             />
 
+            <View className="flex-1 gap-4">
+
             <Text className="text-[24px]">İsim verin</Text>
 
             <TextInput
                 value={categoryName}
                 onChangeText={setCategoryName}
                 placeholder="Kategori adı..."
-                className="w-full border border-gray-300 rounded-lg px-4 py-4 mb-6  text-[20px]"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2  text-[20px]"
             />
 
-            <View className="flex-row justify-center mt-2">
+            <View className="flex-row justify-center">
                 <Button
                     label="Oluştur"
                     color="bg-blue-500"
                     onPress={() => alert('Oluştur.')}
                 />
+            </View>
+
             </View>
         </View>
     );

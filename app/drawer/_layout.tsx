@@ -4,15 +4,11 @@ import HomeScreen from './Home';
 import Category from './Category';
 import Header from "@/components/Home/Header";
 import {SafeAreaView, View, Text} from "react-native";
-import Button from "@/components/Shared/Buton";
+import Footer from "@/components/Drawer/Footer";
 
 const Drawer = createDrawerNavigator();
 
 export default function DrawerLayout() {
-    const mockProfile = {
-        name: 'Yusuf Kaan Usta',
-        email: 'yusuf@example.com',
-    };
 
     return (
         <SafeAreaView className="flex-1 bg-white ">
@@ -36,20 +32,8 @@ export default function DrawerLayout() {
                             <DrawerItemList {...props} />
                         </View>
 
-                        <View className="flex items-center gap-4">
-                            <View>
-                                <Text className="font-medium text-[20px]">{mockProfile.name}</Text>
-                                <Text className="text-gray-500 text-[16px]">{mockProfile.email}</Text>
-                            </View>
 
-                            <View className=" flex-row">
-                                <Button
-                                    label="Çıkış"
-                                    color="bg-red-500"
-                                    onPress={() => alert('Çıkış yapılıyor')}
-                                />
-                            </View>
-                        </View>
+                        <Footer/>
                     </DrawerContentScrollView>
                 )}
             >
