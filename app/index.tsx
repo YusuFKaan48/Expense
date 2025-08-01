@@ -1,25 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import IndexScreen from "./welcome/IndexScreen";
-export default function Index() {
 
+export default function Index() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-    const checkLogin = async () => {
-      const token = await AsyncStorage.getItem('userToken');
-      if (token) {
-        router.replace('/screens/Home');
-      } else {
-        setLoading(false);
-      }
-    };
 
   useEffect(() => {
-    checkLogin();
-  }, []);
+    const timer = setTimeout(() => {
+      router.replace('/drawer/Home');
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [router]);
 
-  if (loading) return null;
 
-  return <IndexScreen />;
+  return null;
 }
