@@ -45,15 +45,25 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     }, []);
 
     useEffect(() => {
-        if (!selectedCategory || !itemLayouts.current[selectedCategory] || !scrollViewRef.current) return;
+        if (!selectedCategory) return;
 
-        const {x, width} = itemLayouts.current[selectedCategory];
-        const offset = x + width / 2 - screenWidth / 2;
+        const tryScrollToSelected = () => {
+            const layout = itemLayouts.current[selectedCategory];
+            if (!layout || !scrollViewRef.current) {
+                setTimeout(tryScrollToSelected, 50);
+                return;
+            }
 
-        scrollViewRef.current.scrollTo({
-            x: Math.max(0, offset),
-            animated: true,
-        });
+            const {x, width} = layout;
+            const offset = x + width / 2 - screenWidth / 2;
+
+            scrollViewRef.current.scrollTo({
+                x: Math.max(0, offset),
+                animated: true,
+            });
+        };
+
+        tryScrollToSelected();
     }, [selectedCategory, categories]);
 
     if (loading) {
@@ -65,33 +75,19 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     }
 
     return (
-        <View className="my-4 h-16 justify-center items-center">
+        <View className="my-4 h-16 justify-center items-center relative">
             <LinearGradient
                 colors={['white', 'rgba(255,255,255,0)']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
-                style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: 80,
-                    zIndex: 10,
-                }}
+                className="absolute left-0 top-0 bottom-0 w-20 z-10"
                 pointerEvents="none"
             />
             <LinearGradient
                 colors={['rgba(255,255,255,0)', 'white']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
-                style={{
-                    position: 'absolute',
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: 80,
-                    zIndex: 10,
-                }}
+                className="absolute right-0 top-0 bottom-0 w-20 z-10"
                 pointerEvents="none"
             />
 
@@ -99,7 +95,7 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                 ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 12, paddingHorizontal: 160}}
+                contentContainerStyle={{gap: 12, paddingHorizontal: 164}}
             >
                 {categories.map(({emoji, name, id}) => (
                     <View
