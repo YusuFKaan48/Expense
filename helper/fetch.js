@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = 'http://192.168.31.61:8000/api/';
+const API_BASE_URL = 'http://192.168.31.226:8000/api/';
 
 class ApiService {
     static instance = null;
@@ -19,6 +19,11 @@ class ApiService {
         }
         this.token = token;
     }
+
+    static resetInstance() {
+        this.instance = null;
+    }
+
 
     getHeaders(isForm = false) {
         const headers = {

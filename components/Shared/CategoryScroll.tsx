@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, View, ActivityIndicator} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {ScrollView, View, ActivityIndicator, LayoutChangeEvent, Dimensions} from 'react-native';
 import CategoryItem from './CategoryItem';
 import {LinearGradient} from 'expo-linear-gradient';
 import ApiService from '@/helper/fetch';
@@ -15,26 +15,26 @@ type Props = {
     selectedCategory: string | null;
 };
 
-
 export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
-
+    const scrollViewRef = useRef<ScrollView>(null);
+    const itemLayouts = useRef<Record<string, { x: number; width: number }>>({});
+    const screenWidth = Dimensions.get('window').width;
 
     const fetchCategories = async () => {
         try {
             const api = await ApiService.getInstance();
             const response = await api.get('user/categories');
-
             if (Array.isArray(response)) {
                 setCategories(response);
             } else {
                 console.warn('Beklenmeyen kategori formatı:', response);
-                setCategories([]); // default boş dizi
+                setCategories([]);
             }
         } catch (error) {
             console.error('Kategori çekme hatası:', error);
-            setCategories([]); // hata durumunda da boş liste
+            setCategories([]);
         } finally {
             setLoading(false);
         }
@@ -44,6 +44,17 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
         fetchCategories();
     }, []);
 
+    useEffect(() => {
+        if (!selectedCategory || !itemLayouts.current[selectedCategory] || !scrollViewRef.current) return;
+
+        const {x, width} = itemLayouts.current[selectedCategory];
+        const offset = x + width / 2 - screenWidth / 2;
+
+        scrollViewRef.current.scrollTo({
+            x: Math.max(0, offset),
+            animated: true,
+        });
+    }, [selectedCategory, categories]);
 
     if (loading) {
         return (
@@ -54,7 +65,7 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     }
 
     return (
-        <View className="my-4 h-16">
+        <View className="my-4 h-16 justify-center items-center">
             <LinearGradient
                 colors={['white', 'rgba(255,255,255,0)']}
                 start={{x: 0, y: 0}}
@@ -85,19 +96,26 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
             />
 
             <ScrollView
+                ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 12}}
+                contentContainerStyle={{gap: 12, paddingHorizontal: 160}}
             >
                 {categories.map(({emoji, name, id}) => (
-                    <CategoryItem
+                    <View
                         key={id}
-                        emoji={emoji}
-                        name={name}
-                        isSelected={selectedCategory === emoji}
-                        onPress={() => onSelect({emoji, name})}
-
-                    />
+                        onLayout={(e: LayoutChangeEvent) => {
+                            const layout = e.nativeEvent.layout;
+                            itemLayouts.current[emoji] = {x: layout.x, width: layout.width};
+                        }}
+                    >
+                        <CategoryItem
+                            emoji={emoji}
+                            name={name}
+                            isSelected={selectedCategory === emoji}
+                            onPress={() => onSelect({emoji, name})}
+                        />
+                    </View>
                 ))}
             </ScrollView>
         </View>

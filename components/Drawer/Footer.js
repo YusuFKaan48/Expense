@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {View, Text, Alert} from 'react-native';
 import Button from '@/components/Shared/Buton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiService from '@/helper/fetch';
+import { router } from 'expo-router';
 
 export default function Footer() {
     const [user, setUser] = useState(null);
@@ -17,12 +19,30 @@ export default function Footer() {
                 console.error('Error loading user data:', e);
             }
         };
-
         fetchUserData();
     }, []);
 
+    const logout = async () => {
+        try {
+            const api = await ApiService.getInstance();
+
+            await api.post('logout', {});
+
+            await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('userData');
+
+            ApiService.resetInstance();
+
+            router.replace('/login/Login');
+        } catch (error) {
+            console.error('Logout error:', error);
+            Alert.alert('Logout Failed', 'An error occurred during logout.');
+        }
+    };
+
+
     return (
-        <View className="flex items-center gap-4 px-4 py-6">
+        <View className="flex gap-4 px-4 py-6">
             <View>
                 <Text className="font-medium text-[20px]">{user?.name ?? 'Kullanıcı'}</Text>
                 <Text className="text-gray-500 text-[16px]">{user?.email ?? 'email@example.com'}</Text>
@@ -32,7 +52,7 @@ export default function Footer() {
                 <Button
                     label="Çıkış"
                     color="bg-red-500"
-                    onPress={() => alert('Çıkış yapılıyor')}
+                    onPress={logout}
                 />
             </View>
         </View>

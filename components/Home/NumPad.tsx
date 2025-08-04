@@ -1,35 +1,94 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Platform } from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    Pressable,
+    Platform,
+    ActionSheetIOS,
+} from 'react-native';
 import Button from '@/components/Shared/Buton';
 import CategoryScroll from '@/components/Shared/CategoryScroll';
-import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function NumPad() {
     const [input, setInput] = useState('');
-    const [selection, setSelection] = useState({ start: 0, end: 0 });
-    const [selectedCategory, setSelectedCategory] = useState<{ emoji: string; name: string } | null>(null);
+    const [selection, setSelection] = useState({start: 0, end: 0});
+    const [selectedCategory, setSelectedCategory] = useState<{ emoji: string; name: string; } | null>(null);
     const [currency, setCurrency] = useState('₺');
     const [showPicker, setShowPicker] = useState(false);
+    const intervalRef = useRef<number | null>(null);
+
+    const loadDefaults = async () => {
+        try {
+            const defaultCat = await AsyncStorage.getItem('defaultCategory');
+            const defaultCurr = await AsyncStorage.getItem('defaultCurrency');
+            if (defaultCat) setSelectedCategory(JSON.parse(defaultCat));
+            if (defaultCurr) setCurrency(defaultCurr);
+        } catch (e) {
+            console.error('Varsayılanları yüklerken hata:', e);
+        }
+    };
+
+    useEffect(() => {
+        loadDefaults();
+        return () => {
+            if (intervalRef.current !== null) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, []);
+
+    const deleteChar = () => {
+        setSelection((sel) => {
+            if (sel.start > 0) {
+                setInput((prev) => {
+                    const newText = prev.slice(0, sel.start - 1) + prev.slice(sel.end);
+                    return newText;
+                });
+                const newPos = sel.start - 1;
+                return {start: newPos, end: newPos};
+            }
+            return sel;
+        });
+    };
 
     const handlePress = (val: string) => {
         if (val === '⌫') {
-            if (selection.start > 0) {
-                const newText = input.slice(0, selection.start - 1) + input.slice(selection.end);
-                const newPos = selection.start - 1;
-                setInput(newText);
-                setSelection({ start: newPos, end: newPos });
-            }
+            deleteChar();
         } else {
-            const newText = input.slice(0, selection.start) + val + input.slice(selection.end);
+            const newText =
+                input.slice(0, selection.start) + val + input.slice(selection.end);
             const newPos = selection.start + val.length;
             setInput(newText);
-            setSelection({ start: newPos, end: newPos });
+            setSelection({start: newPos, end: newPos});
         }
     };
 
     const handleTextChange = (text: string) => {
         const numericText = text.replace(/[^0-9,]/g, '');
         setInput(numericText);
+    };
+
+    const handleSelectCategory = (category: { emoji: string; name: string }) => {
+        setSelectedCategory(category);
+    };
+
+    const showIOSPicker = () => {
+        const options = ['₺', '$', '€', '£', '¥', 'İptal'];
+        const cancelButtonIndex = options.length - 1;
+
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                options,
+                cancelButtonIndex,
+            },
+            (buttonIndex) => {
+                if (buttonIndex !== cancelButtonIndex) {
+                    setCurrency(options[buttonIndex]);
+                }
+            }
+        );
     };
 
     const grid = [
@@ -42,41 +101,30 @@ export default function NumPad() {
 
     return (
         <View className="flex justify-between flex-1">
-            <View className="flex flex-col gap-2 justify-center items-center flex-1">
-                <View className="flex flex-row justify-center items-center">
+            <View className="gap-2 justify-center items-center flex-1">
+                <View className="flex-row justify-center items-center">
                     <TextInput
-                        className="text-6xl font-light text-right text-gray-800 min-h-18"
+                        className="text-[54px] font-light text-right text-gray-800"
                         value={input}
                         onChangeText={handleTextChange}
                         onSelectionChange={(e) => setSelection(e.nativeEvent.selection)}
                         selection={selection}
                         placeholder="0.00"
-                        placeholderTextColor={"#ddd"}
+                        placeholderTextColor={'#ddd'}
                         keyboardType="numeric"
                     />
-                    <Pressable onPress={() => setShowPicker(!showPicker)}>
-                        <Text className="text-6xl text-[#ddd] min-h-14">{currency}</Text>
+                    <Pressable
+                        onPress={() => {
+                            if (Platform.OS === 'ios') {
+                                showIOSPicker();
+                            } else {
+                                setShowPicker(!showPicker);
+                            }
+                        }}
+                    >
+                        <Text className="text-[48px] text-[#ddd] text-right">{currency}</Text>
                     </Pressable>
                 </View>
-
-                {showPicker && (
-                    <Picker
-                        selectedValue={currency}
-                        onValueChange={(value) => {
-                            setCurrency(value);
-                            setShowPicker(false);
-                        }}
-                        style={{
-                            width: 150,
-                            height: Platform.OS === 'ios' ? 200 : 50,
-                        }}
-                        mode="dropdown"
-                    >
-                        {['₺', '$', '€', '£', '¥'].map((symbol) => (
-                            <Picker.Item key={symbol} label={symbol} value={symbol} />
-                        ))}
-                    </Picker>
-                )}
 
                 {selectedCategory && (
                     <Text className="text-base text-gray-500">{selectedCategory.name}</Text>
@@ -85,7 +133,7 @@ export default function NumPad() {
 
             <View>
                 <CategoryScroll
-                    onSelect={(category) => setSelectedCategory(category)}
+                    onSelect={handleSelectCategory}
                     selectedCategory={selectedCategory?.emoji ?? null}
                 />
 
@@ -111,7 +159,20 @@ export default function NumPad() {
                             {sideButtons.map((item, i) => (
                                 <Pressable
                                     key={i}
-                                    onPress={() => handlePress(item)}
+                                    onPressIn={() => {
+                                        if (item === '⌫') {
+                                            deleteChar();
+                                            intervalRef.current = setInterval(deleteChar, 150);
+                                        } else {
+                                            handlePress(item);
+                                        }
+                                    }}
+                                    onPressOut={() => {
+                                        if (item === '⌫' && intervalRef.current !== null) {
+                                            clearInterval(intervalRef.current);
+                                            intervalRef.current = null;
+                                        }
+                                    }}
                                     className="rounded-xl items-center justify-center bg-gray-300 py-5"
                                 >
                                     <Text className="text-2xl text-black">{item}</Text>
@@ -121,16 +182,8 @@ export default function NumPad() {
                     </View>
 
                     <View className="flex-row gap-4">
-                        <Button
-                            label="Gelir"
-                            color="bg-green-500"
-                            onPress={() => alert('Gelir')}
-                        />
-                        <Button
-                            label="Gider"
-                            color="bg-red-500"
-                            onPress={() => alert('Gider')}
-                        />
+                        <Button label="Gelir" color="bg-green-500" onPress={() => alert('Gelir')}/>
+                        <Button label="Gider" color="bg-red-500" onPress={() => alert('Gider')}/>
                     </View>
                 </View>
             </View>
