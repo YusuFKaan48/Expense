@@ -5,6 +5,7 @@ import Category from './Category';
 import Header from "@/components/Home/Header";
 import {SafeAreaView, View, Text} from "react-native";
 import Footer from "@/components/Drawer/Footer";
+import ListPage from "@/components/List/ListPage";
 
 const Drawer = createDrawerNavigator();
 
@@ -45,6 +46,11 @@ export default function DrawerLayout() {
                 <Drawer.Screen
                     name="Kategori Ekle"
                     component={Category}
+                    options={{header: () => <Header/>}}
+                />
+                <Drawer.Screen
+                    name="Liste"
+                    component={ListPage}
                     options={{header: () => <Header/>}}
                 />
             </Drawer.Navigator>

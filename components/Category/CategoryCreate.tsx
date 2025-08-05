@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, Alert, ScrollView, Pressable} from 'react-native';
+import React, {useRef, useState, useEffect} from 'react';
+import {View, Text, TextInput, Alert, ScrollView, Pressable, LayoutChangeEvent} from 'react-native';
 import Button from '@/components/Shared/Buton';
 import ApiService from '@/helper/fetch';
+import {LinearGradient} from 'expo-linear-gradient';
+import {Dimensions} from 'react-native';
 
 const emojiOptions = [
     '📚', '🛒', '💰', '🚗', '💻',
@@ -14,6 +16,9 @@ export default function CategoryCreate() {
     const [categoryName, setCategoryName] = useState('');
     const [selectedEmoji, setSelectedEmoji] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const scrollViewRef = useRef<ScrollView>(null);
+    const itemLayouts = useRef<Record<string, {x: number; width: number}>>({});
+    const screenWidth = Dimensions.get('window').width;
 
     const handleCreateCategory = async () => {
         if (!selectedEmoji || !categoryName.trim()) {
@@ -22,10 +27,8 @@ export default function CategoryCreate() {
         }
 
         setIsLoading(true);
-
         try {
             const api = await ApiService.getInstance();
-
             const response = await api.post({
                 url: 'user/categories',
                 parameters: {
@@ -50,28 +53,81 @@ export default function CategoryCreate() {
         }
     };
 
+    useEffect(() => {
+        if (!selectedEmoji) return;
+
+        const layout = itemLayouts.current[selectedEmoji];
+        if (!layout || !scrollViewRef.current) return;
+
+        const offset = layout.x + layout.width / 2 - screenWidth / 2 + 35;
+        scrollViewRef.current.scrollTo({
+            x: Math.max(0, offset),
+            animated: true,
+        });
+    }, [selectedEmoji]);
+
     return (
-        <View className=" bg-white px-6 py-4">
+        <View className="bg-white px-6 py-4">
             <Text className="text-[24px] mb-2">Emoji seçin</Text>
 
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 8}}
+            <View className="mt-2 h-16 justify-center relative">
+                <LinearGradient
+                    colors={['white', 'rgba(255,255,255,0)']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: 40,
+                        zIndex: 10,
+                    }}
+                    pointerEvents="none"
+                />
+                <LinearGradient
+                    colors={['rgba(255,255,255,0)', 'white']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: 40,
+                        zIndex: 10,
+                    }}
+                    pointerEvents="none"
+                />
 
-            >
-                {emojiOptions.map((emoji, index) => (
-                    <Pressable
-                        key={index}
-                        onPress={() => setSelectedEmoji(emoji)}
-                        className={`px-4 py-2  ${
-                            selectedEmoji === emoji ? 'bg-blue-200 border-blue-500 border rounded-lg' : ''
-                        }`}
-                    >
-                        <Text className="text-[24px]">{emoji}</Text>
-                    </Pressable>
-                ))}
-            </ScrollView>
+                <ScrollView
+                    ref={scrollViewRef}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{gap: 12, paddingHorizontal: 120}}
+                >
+                    {emojiOptions.map((emoji, index) => (
+                        <View
+                            key={index}
+                            onLayout={(e: LayoutChangeEvent) => {
+                                const layout = e.nativeEvent.layout;
+                                itemLayouts.current[emoji] = {x: layout.x, width: layout.width};
+                            }}
+                        >
+                            <Pressable
+                                onPress={() => setSelectedEmoji(emoji)}
+                                className={`px-4 py-2 ${
+                                    selectedEmoji === emoji
+                                        ? 'bg-blue-200 border-blue-500 border rounded-lg'
+                                        : ''
+                                }`}
+                            >
+                                <Text className="text-[24px]">{emoji}</Text>
+                            </Pressable>
+                        </View>
+                    ))}
+                </ScrollView>
+            </View>
 
             <View className="mt-4 gap-4">
                 <Text className="text-[24px]">Kategori ismi</Text>

@@ -1,15 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    Pressable,
-    Platform,
-    ActionSheetIOS,
-} from 'react-native';
+import {View, Text, TextInput, Pressable, Platform, ActionSheetIOS} from 'react-native';
 import Button from '@/components/Shared/Buton';
 import CategoryScroll from '@/components/Shared/CategoryScroll';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiService from '@/helper/fetch';
 
 export default function NumPad() {
     const [input, setInput] = useState('');
@@ -90,6 +84,47 @@ export default function NumPad() {
             }
         );
     };
+
+    const saveTransaction = async (type: 'gelir' | 'gider') => {
+        if (!selectedCategory) {
+            alert('Lütfen bir kategori seçin!');
+            return;
+        }
+
+        if (!input || parseFloat(input.replace(',', '.')) <= 0) {
+            alert('Lütfen geçerli bir tutar girin!');
+            return;
+        }
+
+        try {
+            const api = await ApiService.getInstance();
+
+            const response = await api.post({
+                url: 'transaction',
+                parameters: {
+                    type,
+                    amount: parseFloat(input.replace(',', '.')),
+                    currency,
+                    category_name: selectedCategory.name,
+                    category_emoji: selectedCategory.emoji,
+                },
+            });
+
+            console.log('API Response:', response);
+
+            if (response.success) {
+                alert('İşlem başarıyla kaydedildi!');
+                setInput('');
+                setSelection({start: 0, end: 0});
+            } else {
+                alert('İşlem kaydedilirken hata oluştu.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Sunucuya bağlanırken hata oluştu.');
+        }
+    };
+
 
     const grid = [
         ['1', '2', '3'],
@@ -182,8 +217,8 @@ export default function NumPad() {
                     </View>
 
                     <View className="flex-row gap-4">
-                        <Button label="Gelir" color="bg-green-500" onPress={() => alert('Gelir')}/>
-                        <Button label="Gider" color="bg-red-500" onPress={() => alert('Gider')}/>
+                        <Button label="Gelir" color="bg-green-500" onPress={() => saveTransaction('gelir')}/>
+                        <Button label="Gider" color="bg-red-500" onPress={() => saveTransaction('gider')}/>
                     </View>
                 </View>
             </View>

@@ -55,14 +55,13 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
             }
 
             const {x, width} = layout;
-            const offset = x + width / 2 - screenWidth / 2;
+            const offset = x + width / 2 - screenWidth / 2 + 20;
 
             scrollViewRef.current.scrollTo({
                 x: Math.max(0, offset),
                 animated: true,
             });
         };
-
         tryScrollToSelected();
     }, [selectedCategory, categories]);
 
@@ -95,7 +94,7 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                 ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 12, paddingHorizontal: 164}}
+                contentContainerStyle={{gap: 12, paddingHorizontal: 120}}
             >
                 {categories.map(({emoji, name, id}) => (
                     <View
