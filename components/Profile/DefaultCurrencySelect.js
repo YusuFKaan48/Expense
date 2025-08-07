@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, View, Text, Pressable, Dimensions, Alert } from 'react-native';
+import { ScrollView, View, Text, Pressable, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '@/helper/fetch';
+import Toast from 'react-native-toast-message';
 
 export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
     const scrollViewRef = useRef(null);
@@ -17,11 +18,19 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
             if (Array.isArray(response) && response.every(item => typeof item === 'string')) {
                 setCurrencyOptions(response);
             } else {
-                Alert.alert('Hata', 'Para birimleri geçersiz formatta geldi.');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hata',
+                    text2: 'Para birimleri geçersiz formatta geldi.',
+                });
             }
         } catch (error) {
             console.error('Para birimleri alınamadı:', error);
-            Alert.alert('Hata', 'Para birimleri alınırken bir hata oluştu.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Para birimleri alınırken bir hata oluştu.',
+            });
         }
     };
 
@@ -29,23 +38,37 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
         fetchCurrencyOptions();
     }, []);
 
-    useEffect(() => {
+    const scrollToSelected = () => {
+        if (!defaultCurrency || !scrollViewRef.current) return;
+
         const layout = itemLayouts.current[defaultCurrency];
-        if (!layout || !scrollViewRef.current) return;
+
+        if (!layout) {
+            setTimeout(scrollToSelected, 50);
+            return;
+        }
 
         const { x, width } = layout;
-        const offset = x + width / 2 - screenWidth / 2 + 20;
+        const offset = x + width / 2 - screenWidth / 2 + 16;
 
         scrollViewRef.current.scrollTo({
             x: Math.max(0, offset),
             animated: true,
         });
+    };
+
+    useEffect(() => {
+        scrollToSelected();
     }, [defaultCurrency, currencyOptions]);
 
     const handleSelect = async (val) => {
         setDefaultCurrency(val);
         await AsyncStorage.setItem('defaultCurrency', val);
-        Alert.alert('Kaydedildi', 'Varsayılan para birimi kaydedildi.');
+        Toast.show({
+            type: 'success',
+            text1: 'Kaydedildi',
+            text2: 'Varsayılan para birimi kaydedildi.',
+        });
     };
 
     return (
@@ -54,14 +77,17 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
                 ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 12, paddingHorizontal: 177 }}
+                contentContainerStyle={{ gap: 12, paddingHorizontal: 80 }}
             >
                 {currencyOptions.map((currency) => (
                     <View
                         key={currency}
                         onLayout={(e) => {
                             const layout = e.nativeEvent.layout;
-                            itemLayouts.current[currency] = { x: layout.x, width: layout.width };
+                            itemLayouts.current[currency] = {
+                                x: layout.x,
+                                width: layout.width,
+                            };
                         }}
                     >
                         <Pressable

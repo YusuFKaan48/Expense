@@ -1,11 +1,10 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import {View, Text, Pressable, ScrollView} from 'react-native';
+import React from 'react';
+import { View, Text, Pressable, ScrollView, Modal } from 'react-native';
 
-type ModalOption = { label: string; value: string | number };
+export type ModalOption = { label: string; value: string | number };
+export type FilterType = 'year' | 'month' | 'day' | 'category' | 'currency' | null;
 
-type FilterType = 'year' | 'month' | 'day' | 'category' | 'currency' | null;
-
-type FilterModalProps = {
+function FilterModal({visible, setVisible, activeStep, setActiveStep, onSelectFilterType, filterType, options, selected,setSelected, onClearAll, onBackToTypes,}: {
     visible: boolean;
     setVisible: (val: boolean) => void;
     activeStep: 'filterType' | 'filterOptions';
@@ -17,82 +16,38 @@ type FilterModalProps = {
     setSelected: (val: string | number | null) => void;
     onClearAll: () => void;
     onBackToTypes: () => void;
-};
-
-export function FilterModal({
-                                visible,
-                                setVisible,
-                                activeStep,
-                                setActiveStep,
-                                onSelectFilterType,
-                                filterType,
-                                options,
-                                selected,
-                                setSelected,
-                                onClearAll,
-                                onBackToTypes,
-                            }: FilterModalProps) {
+}) {
     return (
         <Modal visible={visible} transparent animationType="slide">
             <View
-                style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(0,0,0,0.3)',
-                    justifyContent: 'center',
-                    paddingHorizontal: 24,
-                }}
+                className="flex-1 justify-center px-6"
+                style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
             >
-                <View
-                    style={{
-                        backgroundColor: 'white',
-                        borderRadius: 20,
-                        paddingVertical: 20,
-                        paddingHorizontal: 16,
-                        maxHeight: '70%',
-                    }}
-                >
+                <View className="bg-white rounded-2xl py-5 px-4 max-h-[70%] gap-4">
                     {activeStep === 'filterType' && (
                         <>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                    textAlign: 'center',
-                                    marginBottom: 16,
-                                }}
-                            >
-                                Filtre Türü Seç
-                            </Text>
+                            <Text className="text-2xl font-bold text-center pb-4">Filtre Türü Seç</Text>
                             <ScrollView
                                 contentContainerStyle={{
                                     flexDirection: 'row',
                                     flexWrap: 'wrap',
                                     justifyContent: 'space-between',
+                                    gap:'12'
                                 }}
                             >
                                 {[
-                                    {label: 'Yıl', value: 'year'},
-                                    {label: 'Ay', value: 'month'},
-                                    {label: 'Gün', value: 'day'},
-                                    {label: 'Kategori', value: 'category'},
-                                    {label: 'Para Birimi', value: 'currency'},
+                                    { label: 'Yıl', value: 'year' },
+                                    { label: 'Ay', value: 'month' },
+                                    { label: 'Gün', value: 'day' },
+                                    { label: 'Kategori', value: 'category' },
+                                    { label: 'Para Birimi', value: 'currency' },
                                 ].map((opt) => (
                                     <Pressable
                                         key={opt.value.toString()}
                                         onPress={() => onSelectFilterType(opt.value as FilterType)}
-                                        style={{
-                                            width: '30%',
-                                            marginVertical: 8,
-                                            backgroundColor: '#BFDBFE',
-                                            paddingVertical: 10,
-                                            borderRadius: 9999,
-                                            alignItems: 'center',
-                                            marginHorizontal: 4,
-                                        }}
+                                        className="w-[30%] py-2 bg-blue-200  rounded-full items-center px-1"
                                     >
-                                        <Text style={{fontWeight: '600', color: '#2563EB'}}>
-                                            {opt.label}
-                                        </Text>
+                                        <Text className="font-semibold text-blue-700">{opt.label}</Text>
                                     </Pressable>
                                 ))}
                             </ScrollView>
@@ -101,69 +56,33 @@ export function FilterModal({
                                     onClearAll();
                                     setVisible(false);
                                 }}
-                                style={{
-                                    marginTop: 16,
-                                    backgroundColor: '#FCA5A5',
-                                    paddingVertical: 12,
-                                    borderRadius: 9999,
-                                    alignItems: 'center',
-                                }}
+                                className="mt-4 bg-red-300 py-3 rounded-full items-center"
                             >
-                                <Text style={{fontWeight: '600', color: '#B91C1C'}}>
-                                    Tümünü Temizle
-                                </Text>
+                                <Text className="font-semibold text-red-800">Tümünü Temizle</Text>
                             </Pressable>
                             <Pressable
                                 onPress={() => setVisible(false)}
-                                style={{
-                                    marginTop: 8,
-                                    backgroundColor: '#E5E7EB',
-                                    paddingVertical: 12,
-                                    borderRadius: 9999,
-                                    alignItems: 'center',
-                                }}
+                                className="pt-2 bg-gray-200 py-3 rounded-full items-center"
                             >
-                                <Text style={{fontWeight: '600', color: '#374151'}}>Kapat</Text>
+                                <Text className="font-semibold text-gray-700">Kapat</Text>
                             </Pressable>
                         </>
                     )}
 
                     {activeStep === 'filterOptions' && (
                         <>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    marginBottom: 12,
-                                }}
-                            >
+                            <View className="flex-row justify-between items-center pb-3  ">
                                 <Pressable onPress={onBackToTypes}>
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            color: '#2563EB',
-                                            fontWeight: '600',
-                                        }}
-                                    >
-                                        {'< Geri'}
-                                    </Text>
+                                    <Text className="text-lg text-blue-700 font-semibold">{'< Geri'}</Text>
                                 </Pressable>
-                                <Text
-                                    style={{
-                                        fontSize: 20,
-                                        fontWeight: 'bold',
-                                        textAlign: 'center',
-                                        flex: 1,
-                                    }}
-                                >
+                                <Text className="text-2xl font-bold text-center flex-1">
                                     {filterType === 'year' && 'Yıl Seçimi'}
                                     {filterType === 'month' && 'Ay Seçimi'}
                                     {filterType === 'day' && 'Gün Seçimi'}
                                     {filterType === 'category' && 'Kategori Seçimi'}
                                     {filterType === 'currency' && 'Para Birimi Seçimi'}
                                 </Text>
-                                <View style={{width: 50}}/>
+                                <View className="w-12" />
                             </View>
 
                             <ScrollView
@@ -171,6 +90,7 @@ export function FilterModal({
                                     flexDirection: 'row',
                                     flexWrap: 'wrap',
                                     justifyContent: 'space-between',
+                                    gap: '12'
                                 }}
                             >
                                 {options.map((opt) => {
@@ -179,21 +99,14 @@ export function FilterModal({
                                         <Pressable
                                             key={opt.value.toString()}
                                             onPress={() => setSelected(opt.value)}
-                                            style={{
-                                                width: '30%',
-                                                marginVertical: 8,
-                                                backgroundColor: isSelected ? '#2563EB' : '#BFDBFE',
-                                                paddingVertical: 10,
-                                                borderRadius: 9999,
-                                                alignItems: 'center',
-                                                marginHorizontal: 4,
-                                            }}
+                                            className={`w-[30%] py-2 py-2 rounded-full items-center px-1 ${
+                                                isSelected ? 'bg-blue-800' : 'bg-blue-200'
+                                            }`}
                                         >
                                             <Text
-                                                style={{
-                                                    fontWeight: '600',
-                                                    color: isSelected ? 'white' : '#2563EB',
-                                                }}
+                                                className={`font-semibold ${
+                                                    isSelected ? 'text-white' : 'text-blue-700'
+                                                }`}
                                             >
                                                 {opt.label}
                                             </Text>
@@ -206,29 +119,15 @@ export function FilterModal({
                                     setSelected(null);
                                     setVisible(false);
                                 }}
-                                style={{
-                                    marginTop: 16,
-                                    backgroundColor: '#FCA5A5',
-                                    paddingVertical: 12,
-                                    borderRadius: 9999,
-                                    alignItems: 'center',
-                                }}
+                                className="pt-4 bg-red-300 py-3 rounded-full items-center"
                             >
-                                <Text style={{fontWeight: '600', color: '#B91C1C'}}>
-                                    Temizle
-                                </Text>
+                                <Text className="font-semibold text-red-800">Temizle</Text>
                             </Pressable>
                             <Pressable
                                 onPress={() => setVisible(false)}
-                                style={{
-                                    marginTop: 8,
-                                    backgroundColor: '#E5E7EB',
-                                    paddingVertical: 12,
-                                    borderRadius: 9999,
-                                    alignItems: 'center',
-                                }}
+                                className="pt-2 bg-gray-200 py-3 rounded-full items-center"
                             >
-                                <Text style={{fontWeight: '600', color: '#374151'}}>Kapat</Text>
+                                <Text className="font-semibold text-gray-700">Kapat</Text>
                             </Pressable>
                         </>
                     )}
@@ -237,3 +136,5 @@ export function FilterModal({
         </Modal>
     );
 }
+
+export default FilterModal;

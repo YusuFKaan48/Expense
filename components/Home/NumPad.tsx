@@ -1,17 +1,18 @@
-import React, {useState, useRef, useCallback} from 'react';
-import {View, Text, TextInput, Pressable} from 'react-native';
+import React, { useState, useRef, useCallback } from 'react';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import Button from '@/components/Shared/Buton';
 import CategoryScroll from '@/components/Shared/CategoryScroll';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '@/helper/fetch';
-import {List} from 'iconoir-react-native';
+import { MoreHoriz } from 'iconoir-react-native';
 import CurrencyPicker from '@/components/Home/CurrencyPicker';
-import {useFocusEffect} from '@react-navigation/native';
-import {useRouter} from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import Toast from 'react-native-toast-message';
 
 export default function NumPad() {
     const [input, setInput] = useState('');
-    const [selection, setSelection] = useState({start: 0, end: 0});
+    const [selection, setSelection] = useState({ start: 0, end: 0 });
     const [selectedCategory, setSelectedCategory] = useState<{ emoji: string; name: string } | null>(null);
     const [currency, setCurrency] = useState('₺');
     const intervalRef = useRef<number | null>(null);
@@ -48,7 +49,7 @@ export default function NumPad() {
                     return newText;
                 });
                 const newPos = sel.start - 1;
-                return {start: newPos, end: newPos};
+                return { start: newPos, end: newPos };
             }
             return sel;
         });
@@ -61,7 +62,7 @@ export default function NumPad() {
             const newText = input.slice(0, selection.start) + val + input.slice(selection.end);
             const newPos = selection.start + val.length;
             setInput(newText);
-            setSelection({start: newPos, end: newPos});
+            setSelection({ start: newPos, end: newPos });
         }
     };
 
@@ -76,12 +77,20 @@ export default function NumPad() {
 
     const saveTransaction = async (type: 'gelir' | 'gider') => {
         if (!selectedCategory) {
-            alert('Lütfen bir kategori seçin!');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Lütfen bir kategori seçin!',
+            });
             return;
         }
 
         if (!input || parseFloat(input.replace(',', '.')) <= 0) {
-            alert('Lütfen geçerli bir tutar girin!');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Lütfen geçerli bir tutar girin!',
+            });
             return;
         }
 
@@ -99,18 +108,28 @@ export default function NumPad() {
                 },
             });
 
-            console.log('API Response:', response);
-
             if (response.success) {
-                alert('İşlem başarıyla kaydedildi!');
+                Toast.show({
+                    type: 'success',
+                    text1: 'Başarılı',
+                    text2: 'İşlem başarıyla kaydedildi!',
+                });
                 setInput('');
-                setSelection({start: 0, end: 0});
+                setSelection({ start: 0, end: 0 });
             } else {
-                alert('İşlem kaydedilirken hata oluştu.');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hata',
+                    text2: 'İşlem kaydedilirken hata oluştu.',
+                });
             }
         } catch (error) {
             console.error(error);
-            alert('Sunucuya bağlanırken hata oluştu.');
+            Toast.show({
+                type: 'error',
+                text1: 'Sunucu Hatası',
+                text2: 'Sunucuya bağlanırken hata oluştu.',
+            });
         }
     };
 
@@ -125,11 +144,9 @@ export default function NumPad() {
     return (
         <View className="flex justify-between flex-1">
 
-            <View className='flex-row  justify-end'>
-                <Pressable
-                    onPress={() => router.push('/drawer/List')}
-                >
-                    <List width={36} height={36}/>
+            <View className="flex-row justify-end">
+                <Pressable onPress={() => router.push('/drawer/List')}>
+                    <MoreHoriz width={36} height={36} />
                 </Pressable>
             </View>
 
@@ -145,7 +162,7 @@ export default function NumPad() {
                         placeholderTextColor={'#ddd'}
                         keyboardType="numeric"
                     />
-                    <CurrencyPicker currency={currency} setCurrency={setCurrency}/>
+                    <CurrencyPicker currency={currency} setCurrency={setCurrency} />
                 </View>
 
                 {selectedCategory && (
@@ -208,8 +225,8 @@ export default function NumPad() {
                     </View>
 
                     <View className="flex-row gap-4">
-                        <Button label="Gelir" color="bg-green-500" onPress={() => saveTransaction('gelir')}/>
-                        <Button label="Gider" color="bg-red-500" onPress={() => saveTransaction('gider')}/>
+                        <Button label="Gelir" color="bg-green-500" onPress={() => saveTransaction('gelir')} />
+                        <Button label="Gider" color="bg-red-500" onPress={() => saveTransaction('gider')} />
                     </View>
                 </View>
             </View>

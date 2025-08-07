@@ -1,8 +1,9 @@
 import {useRouter} from 'expo-router';
 import React, {useState} from 'react';
-import {Alert, Text, TextInput, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import {loginUser} from '../../components/Api/login';
 import Button from '../../components/Shared/Buton';
+import Toast from 'react-native-toast-message';
 
 export default function Login() {
     const router = useRouter();
@@ -24,7 +25,11 @@ export default function Login() {
             console.log('Login error:', error);
             console.log('Login error message:', error.message);
 
-            Alert.alert('Login failed', error.message || 'Something went wrong');
+            Toast.show({
+                type: 'error',
+                text1: 'Giriş Başarısız',
+                text2: error.message || 'Bir hata oluştu',
+            });
         } finally {
             setLoading(false);
         }
@@ -59,7 +64,6 @@ export default function Login() {
                     onPressOut={() => setIsPressed(false)}
                     onPress={handleLogin}
                 />
-
             </View>
         </View>
     );

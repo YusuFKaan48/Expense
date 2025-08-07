@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Pressable, ActionSheetIOS, Alert } from 'react-native';
+import { Text, Pressable, ActionSheetIOS } from 'react-native';
 import ApiService from '@/helper/fetch';
+import Toast from 'react-native-toast-message';
 
 type Props = {
     currency: string;
@@ -18,11 +19,19 @@ export default function CurrencyPicker({ currency, setCurrency }: Props) {
             if (Array.isArray(response) && response.every(item => typeof item === 'string')) {
                 setOptions([...response, 'İptal']);
             } else {
-                Alert.alert('Hata', 'Sunucudan geçersiz para birimi verisi alındı.');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hata',
+                    text2: 'Sunucudan geçersiz para birimi verisi alındı.',
+                });
             }
         } catch (error) {
             console.error('Para birimleri alınamadı:', error);
-            Alert.alert('Hata', 'Para birimleri alınırken bir hata oluştu.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Para birimleri alınırken bir hata oluştu.',
+            });
         }
     };
 
@@ -32,7 +41,11 @@ export default function CurrencyPicker({ currency, setCurrency }: Props) {
 
     const showIOSPicker = () => {
         if (options.length === 0) {
-            Alert.alert('Hata', 'Para birimi listesi yüklenemedi.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Para birimi listesi yüklenemedi.',
+            });
             return;
         }
 

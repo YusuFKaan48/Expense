@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Alert, Dimensions} from 'react-native';
+import {View, Alert, Dimensions, Text} from 'react-native';
 import {BarChart} from 'react-native-gifted-charts';
 
 type ChartProps = {
@@ -12,7 +12,7 @@ const months = [
 ];
 
 const Chart: React.FC<ChartProps> = ({monthlyData}) => {
-    const [chartHeight, setChartHeight] = useState(Dimensions.get('window').height / 6);
+    const [chartHeight, setChartHeight] = useState(Dimensions.get('window').height / 7);
     const currentMonth = new Date().getMonth();
 
     const maxValue = Math.max(
@@ -39,7 +39,7 @@ const Chart: React.FC<ChartProps> = ({monthlyData}) => {
             gradientColor: '#86EFAC',
             spacing: spacing,
             label: months[i].slice(0, 3),
-            onPress: () => Alert.alert(`${months[i]} Gelir`, `${month.gelir.toFixed(2)} ₺`),
+            onPress: () => Alert.alert(`${months[i]} Gelir`, `${month.gelir.toFixed(2)} `),
         },
         {
             value: month.gider,
@@ -47,16 +47,15 @@ const Chart: React.FC<ChartProps> = ({monthlyData}) => {
             gradientColor: '#FCA5A5',
             spacing: spacing,
             label: '',
-            onPress: () => Alert.alert(`${months[i]} Gider`, `${month.gider.toFixed(2)} ₺`),
+            onPress: () => Alert.alert(`${months[i]} Gider`, `${month.gider.toFixed(2)} `),
         },
     ]);
 
     const initialIndex = currentMonth * 2;
 
     return (
-        <View
-
-        >
+        <View>
+            <Text className="text-[24px] py-2">Yıllık Grafik</Text>
             <BarChart
                 data={data}
                 barWidth={barWidth}
@@ -69,8 +68,8 @@ const Chart: React.FC<ChartProps> = ({monthlyData}) => {
                 yAxisColor={'gray'}
                 xAxisType="dashed"
                 xAxisColor="lightgray"
-                yAxisTextStyle={{color: 'gray'}}
-                xAxisLabelTextStyle={{color: 'gray', textAlign: 'center', fontWeight: 'bold'}}
+                yAxisTextStyle={{color: 'gray', fontSize: 11}}
+                xAxisLabelTextStyle={{color: 'gray', textAlign: 'center', fontWeight: 'medium'}}
                 stepValue={sectionValue}
                 maxValue={maxValue}
                 noOfSections={noOfSections}

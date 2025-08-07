@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, ScrollView } from 'react-native';
 import Button from '@/components/Shared/Buton';
 import ApiService from '@/helper/fetch';
+import Toast from 'react-native-toast-message';
 
 export default function CurrencyCreator() {
     const [currencies, setCurrencies] = useState<string[]>([]);
@@ -16,11 +17,19 @@ export default function CurrencyCreator() {
             if (Array.isArray(response) && response.every(item => typeof item === 'string')) {
                 setCurrencies(response);
             } else {
-                Alert.alert('Hata', 'Sunucudan geçersiz veri alındı.');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hata',
+                    text2: 'Sunucudan geçersiz veri alındı.',
+                });
             }
         } catch (error) {
             console.error('Para birimleri alınamadı:', error);
-            Alert.alert('Hata', 'Para birimleri alınırken bir hata oluştu.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Para birimleri alınırken bir hata oluştu.',
+            });
         }
     };
 
@@ -28,12 +37,20 @@ export default function CurrencyCreator() {
         const symbol = newCurrency.trim();
 
         if (!symbol) {
-            Alert.alert('Hata', 'Lütfen bir para birimi sembolü girin.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Lütfen bir para birimi sembolü girin.',
+            });
             return;
         }
 
         if (currencies.includes(symbol)) {
-            Alert.alert('Zaten mevcut', 'Bu para birimini zaten eklediniz.');
+            Toast.show({
+                type: 'info',
+                text1: 'Zaten mevcut',
+                text2: 'Bu para birimini zaten eklediniz.',
+            });
             return;
         }
 
@@ -48,16 +65,32 @@ export default function CurrencyCreator() {
             if (response?.symbol) {
                 setCurrencies(prev => [...prev, response.symbol]);
                 setNewCurrency('');
-                Alert.alert('Başarılı', 'Yeni para birimi eklendi.');
+                Toast.show({
+                    type: 'success',
+                    text1: 'Başarılı',
+                    text2: 'Yeni para birimi eklendi.',
+                });
             } else if (response?.message === 'Zaten mevcut.') {
-                Alert.alert('Zaten mevcut', 'Bu para birimini zaten eklediniz.');
+                Toast.show({
+                    type: 'info',
+                    text1: 'Zaten mevcut',
+                    text2: 'Bu para birimini zaten eklediniz.',
+                });
             } else {
                 console.log('API cevabı:', response);
-                Alert.alert('Hata', 'Para birimi eklenemedi.');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hata',
+                    text2: 'Para birimi eklenemedi.',
+                });
             }
         } catch (error) {
             console.error('Ekleme hatası:', error);
-            Alert.alert('Hata', 'Sunucu hatası.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Sunucu hatası.',
+            });
         } finally {
             setLoading(false);
         }
@@ -87,7 +120,7 @@ export default function CurrencyCreator() {
                 ))}
             </ScrollView>
 
-            <View className='gap-4'>
+            <View className="gap-4">
                 <Text className="text-[24px]">Yeni Para Birimi Ekle</Text>
 
                 <TextInput
