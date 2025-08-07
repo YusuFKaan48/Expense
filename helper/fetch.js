@@ -2,33 +2,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_BASE_URL = 'http://192.168.31.226:8000/api/';
 
+if (!global.__apiInstance__) {
+    global.__apiInstance__ = null;
+}
+
 class ApiService {
-    static instance = null;
-
-    static async getInstance() {
-        if (!ApiService.instance) {
-            const token = await AsyncStorage.getItem('userToken');
-            ApiService.instance = new ApiService(token);
-        }
-        return ApiService.instance;
-    }
-
     constructor(token) {
-        if (ApiService.instance) {
-            throw new Error('Use ApiService.getInstance() instead of new.');
-        }
         this.token = token;
     }
 
-    static resetInstance() {
-        this.instance = null;
+    static async getInstance() {
+        if (!global.__apiInstance__) {
+            const token = await AsyncStorage.getItem('userToken');
+            global.__apiInstance__ = new ApiService(token);
+        }
+        return global.__apiInstance__;
     }
 
+    static resetInstance() {
+        global.__apiInstance__ = null;
+    }
 
     getHeaders(isForm = false) {
         const headers = {
             Accept: 'application/json',
-            ...(this.token && {Authorization: `Bearer ${this.token}`}),
+            ...(this.token ? {Authorization: `Bearer ${this.token}`} : {}),
         };
 
         if (!isForm) {
@@ -56,10 +54,6 @@ class ApiService {
             body,
         });
         return response.json();
-    }
-
-    static clearInstance() {
-        ApiService.instance = null;
     }
 }
 

@@ -94,7 +94,7 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                 ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 12, paddingHorizontal: 120}}
+                contentContainerStyle={{gap: 12, paddingHorizontal: 175}}
             >
                 {categories.map(({emoji, name, id}) => (
                     <View

@@ -67,10 +67,10 @@ export default function CategoryCreate() {
     }, [selectedEmoji]);
 
     return (
-        <View className="bg-white px-6 py-4">
-            <Text className="text-[24px] mb-2">Emoji seçin</Text>
+        <View className="bg-white">
+            <Text className="text-[24px] pb-2">Emoji seçin</Text>
 
-            <View className="mt-2 h-16 justify-center relative">
+            <View className="pt-2 h-16 justify-center relative">
                 <LinearGradient
                     colors={['white', 'rgba(255,255,255,0)']}
                     start={{x: 0, y: 0}}
@@ -129,7 +129,7 @@ export default function CategoryCreate() {
                 </ScrollView>
             </View>
 
-            <View className="mt-4 gap-4">
+            <View className="pt-4 gap-4">
                 <Text className="text-[24px]">Kategori ismi</Text>
 
                 <TextInput
@@ -139,7 +139,7 @@ export default function CategoryCreate() {
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-[20px]"
                 />
 
-                <View className="flex-row justify-center mt-2">
+                <View className="flex-row justify-center pt-2">
                     <Button
                         label={isLoading ? 'Oluşturuluyor...' : 'Oluştur'}
                         onPress={handleCreateCategory}

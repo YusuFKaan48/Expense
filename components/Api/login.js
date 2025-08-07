@@ -17,7 +17,7 @@ export async function loginUser(email, password) {
 
         await AsyncStorage.setItem('userToken', token);
 
-        ApiService.clearInstance();
+        ApiService.resetInstance();
         const api = await ApiService.getInstance();
 
         const userResponse = await api.get('me');

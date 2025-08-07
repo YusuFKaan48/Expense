@@ -6,6 +6,8 @@ import Header from "@/components/Home/Header";
 import {SafeAreaView, View, Text} from "react-native";
 import Footer from "@/components/Drawer/Footer";
 import ListPage from "@/components/List/ListPage";
+import Profile from "@/app/drawer/Profile";
+import Currency from "@/app/drawer/Currency";
 
 const Drawer = createDrawerNavigator();
 
@@ -49,8 +51,25 @@ export default function DrawerLayout() {
                     options={{header: () => <Header/>}}
                 />
                 <Drawer.Screen
-                    name="Liste"
+                    name="Profile"
+                    component={Profile}
+                    options={{
+                        header: () => <Header />,
+                        drawerItemStyle: { display: 'none' }
+                    }}
+                />
+                <Drawer.Screen
+                    name="List"
                     component={ListPage}
+                    options={{
+                        header: () => <Header />,
+                        drawerItemStyle: { display: 'none' }
+                    }}
+                />
+
+                <Drawer.Screen
+                    name="Para Birimi Ekle"
+                    component={Currency}
                     options={{header: () => <Header/>}}
                 />
             </Drawer.Navigator>

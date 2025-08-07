@@ -1,7 +1,8 @@
 import {useRouter} from 'expo-router';
-import {useState} from 'react';
-import {Alert, Pressable, Text, TextInput, View} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, Text, TextInput, View} from 'react-native';
 import {loginUser} from '../../components/Api/login';
+import Button from '../../components/Shared/Buton';
 
 export default function Login() {
     const router = useRouter();
@@ -51,16 +52,13 @@ export default function Login() {
             />
 
             <View className="flex-row mt-6">
-                <Pressable
-                    onPress={handleLogin}
+                <Button
+                    label="Continue"
+                    color="bg-blue-500"
                     onPressIn={() => setIsPressed(true)}
                     onPressOut={() => setIsPressed(false)}
-                    className={`px-8 py-3 rounded-xl ${isPressed ? 'bg-blue-700' : 'bg-blue-500'}`}
-                >
-                    <Text className="text-white text-[18px] text-center">
-                        {loading ? 'Loading...' : 'Continue'}
-                    </Text>
-                </Pressable>
+                    onPress={handleLogin}
+                />
 
             </View>
         </View>

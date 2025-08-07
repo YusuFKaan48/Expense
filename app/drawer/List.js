@@ -1,11 +1,11 @@
 import React from 'react';
-import {View} from "react-native";
-import ListPage from "../../app/../components/List/ListPage";
+import {SafeAreaView} from "react-native";
+import ListPage from "../../components/List/ListPage";
 
-export default function Home() {
+export default function List() {
     return (
-        <View className="flex-1 bg-white px-4 pt-2 pb-2">
+        <SafeAreaView className="flex-1 bg-white ">
             <ListPage/>
-        </View>
+        </SafeAreaView>
     );
 }

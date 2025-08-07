@@ -19,7 +19,7 @@ export default function Header() {
             <Text className="text-[24px] font-regular">Giderli.app</Text>
 
             <Pressable
-                onPress={() => router.push('../profile/Profile')}
+                onPress={() => router.push('../drawer/Profile')}
                 className="p-2"
                 hitSlop={10}
             >

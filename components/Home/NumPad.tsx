@@ -1,17 +1,21 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, TextInput, Pressable, Platform, ActionSheetIOS} from 'react-native';
+import React, {useState, useRef, useCallback} from 'react';
+import {View, Text, TextInput, Pressable} from 'react-native';
 import Button from '@/components/Shared/Buton';
 import CategoryScroll from '@/components/Shared/CategoryScroll';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '@/helper/fetch';
+import {List} from 'iconoir-react-native';
+import CurrencyPicker from '@/components/Home/CurrencyPicker';
+import {useFocusEffect} from '@react-navigation/native';
+import {useRouter} from 'expo-router';
 
 export default function NumPad() {
     const [input, setInput] = useState('');
     const [selection, setSelection] = useState({start: 0, end: 0});
-    const [selectedCategory, setSelectedCategory] = useState<{ emoji: string; name: string; } | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<{ emoji: string; name: string } | null>(null);
     const [currency, setCurrency] = useState('₺');
-    const [showPicker, setShowPicker] = useState(false);
     const intervalRef = useRef<number | null>(null);
+    const router = useRouter();
 
     const loadDefaults = async () => {
         try {
@@ -24,14 +28,17 @@ export default function NumPad() {
         }
     };
 
-    useEffect(() => {
-        loadDefaults();
-        return () => {
-            if (intervalRef.current !== null) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            loadDefaults();
+
+            return () => {
+                if (intervalRef.current !== null) {
+                    clearInterval(intervalRef.current);
+                }
+            };
+        }, [])
+    );
 
     const deleteChar = () => {
         setSelection((sel) => {
@@ -51,8 +58,7 @@ export default function NumPad() {
         if (val === '⌫') {
             deleteChar();
         } else {
-            const newText =
-                input.slice(0, selection.start) + val + input.slice(selection.end);
+            const newText = input.slice(0, selection.start) + val + input.slice(selection.end);
             const newPos = selection.start + val.length;
             setInput(newText);
             setSelection({start: newPos, end: newPos});
@@ -66,23 +72,6 @@ export default function NumPad() {
 
     const handleSelectCategory = (category: { emoji: string; name: string }) => {
         setSelectedCategory(category);
-    };
-
-    const showIOSPicker = () => {
-        const options = ['₺', '$', '€', '£', '¥', 'İptal'];
-        const cancelButtonIndex = options.length - 1;
-
-        ActionSheetIOS.showActionSheetWithOptions(
-            {
-                options,
-                cancelButtonIndex,
-            },
-            (buttonIndex) => {
-                if (buttonIndex !== cancelButtonIndex) {
-                    setCurrency(options[buttonIndex]);
-                }
-            }
-        );
     };
 
     const saveTransaction = async (type: 'gelir' | 'gider') => {
@@ -125,7 +114,6 @@ export default function NumPad() {
         }
     };
 
-
     const grid = [
         ['1', '2', '3'],
         ['4', '5', '6'],
@@ -136,6 +124,15 @@ export default function NumPad() {
 
     return (
         <View className="flex justify-between flex-1">
+
+            <View className='flex-row  justify-end'>
+                <Pressable
+                    onPress={() => router.push('/drawer/List')}
+                >
+                    <List width={36} height={36}/>
+                </Pressable>
+            </View>
+
             <View className="gap-2 justify-center items-center flex-1">
                 <View className="flex-row justify-center items-center">
                     <TextInput
@@ -148,17 +145,7 @@ export default function NumPad() {
                         placeholderTextColor={'#ddd'}
                         keyboardType="numeric"
                     />
-                    <Pressable
-                        onPress={() => {
-                            if (Platform.OS === 'ios') {
-                                showIOSPicker();
-                            } else {
-                                setShowPicker(!showPicker);
-                            }
-                        }}
-                    >
-                        <Text className="text-[48px] text-[#ddd] text-right">{currency}</Text>
-                    </Pressable>
+                    <CurrencyPicker currency={currency} setCurrency={setCurrency}/>
                 </View>
 
                 {selectedCategory && (
@@ -194,10 +181,14 @@ export default function NumPad() {
                             {sideButtons.map((item, i) => (
                                 <Pressable
                                     key={i}
+                                    onLongPress={() => {
+                                        if (item === '⌫') {
+                                            setInput('');
+                                        }
+                                    }}
                                     onPressIn={() => {
                                         if (item === '⌫') {
                                             deleteChar();
-                                            intervalRef.current = setInterval(deleteChar, 150);
                                         } else {
                                             handlePress(item);
                                         }
