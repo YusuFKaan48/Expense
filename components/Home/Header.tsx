@@ -9,21 +9,21 @@ export default function Header() {
     const navigation = useNavigation();
 
     return (
-        <View className="flex-row justify-between items-center bg-white border-b border-b-gray-300 px-4 py-2">
+        <View className="flex-row justify-between items-center bg-[#121826] border-b px-4 py-2">
             <Pressable
                 onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             >
-                <Menu width={28} height={28}/>
+                <Menu width={28} height={28} color="#fff"/>
             </Pressable>
 
-            <Text className="text-[24px] font-regular">Giderli.app</Text>
+            <Text className="text-[32px] font-medium text-white">Giderli</Text>
 
             <Pressable
                 onPress={() => router.push('../drawer/Profile')}
                 className="p-2"
                 hitSlop={10}
             >
-                <User width={28} height={28}/>
+                <User width={28} height={28}  color="#fff"/>
             </Pressable>
         </View>
     );

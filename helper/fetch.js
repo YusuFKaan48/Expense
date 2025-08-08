@@ -44,12 +44,12 @@ class ApiService {
         return response.json();
     }
 
-    async post({url, parameters, formData}) {
+    async post({url, parameters, formData, method = 'POST'}) {
         const headers = this.getHeaders(!!formData);
         const body = formData ? formData : JSON.stringify(parameters);
 
         const response = await fetch(`${API_BASE_URL}${url}`, {
-            method: 'POST',
+            method,
             headers,
             body,
         });

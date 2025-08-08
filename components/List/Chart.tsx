@@ -54,8 +54,8 @@ const Chart: React.FC<ChartProps> = ({monthlyData}) => {
     const initialIndex = currentMonth * 2;
 
     return (
-        <View>
-            <Text className="text-[24px] py-2">Yıllık Grafik</Text>
+        <View className='gap-4'>
+            <Text className="text-[24px] py-2 text-white">Yıllık Grafik</Text>
             <BarChart
                 data={data}
                 barWidth={barWidth}
@@ -65,11 +65,11 @@ const Chart: React.FC<ChartProps> = ({monthlyData}) => {
                 height={chartHeight}
                 showGradient
                 yAxisThickness={1}
-                yAxisColor={'gray'}
+                yAxisColor={'white'}
                 xAxisType="dashed"
-                xAxisColor="lightgray"
-                yAxisTextStyle={{color: 'gray', fontSize: 11}}
-                xAxisLabelTextStyle={{color: 'gray', textAlign: 'center', fontWeight: 'medium'}}
+                xAxisColor="white"
+                yAxisTextStyle={{color: 'white', fontSize: 11}}
+                xAxisLabelTextStyle={{color: 'white', textAlign: 'center', fontWeight: 'medium'}}
                 stepValue={sectionValue}
                 maxValue={maxValue}
                 noOfSections={noOfSections}

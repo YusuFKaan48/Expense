@@ -33,19 +33,19 @@ export default function ProfileScreen() {
 
     if (!user) {
         return (
-            <View className="flex-1 justify-center items-center bg-white px-8 py-4">
+            <View className="flex-1 justify-center items-center">
                 <Text>Kullanıcı bilgileri yükleniyor...</Text>
             </View>
         );
     }
 
     return (
-        <View className="flex-1 justify-between  bg-white">
+        <View className="flex-1 justify-between">
             <View className="flex-1  px-4 pt-2 pb-2">
                 <View className="gap-2 flex-1">
                     <ProfileTopPart name={user.name} email={user.email}/>
 
-                    <Text className="font-medium text-[20px] text-gray-700">Varsayılan kategori ve Para birimi seçimi</Text>
+                    <Text className="font-medium text-[20px] text-gray-200">Varsayılan kategori ve Para birimi seçimi</Text>
 
                     <DefaultCategorySelect
                         defaultCategory={defaultCategory}

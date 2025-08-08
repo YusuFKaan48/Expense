@@ -23,5 +23,5 @@ export default function Index() {
         checkLoginStatus();
     }, [router]);
 
-    return null; // Boş render, sadece yönlendirme yapılıyor
+    return null;
 }

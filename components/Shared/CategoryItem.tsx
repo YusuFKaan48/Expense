@@ -15,7 +15,7 @@ const CategoryItem = forwardRef<any, CategoryItemProps>(
                 ref={ref}
                 onPress={onPress}
                 className={`w-14 h-14 justify-center items-center mx-1 ${
-                    isSelected ? 'bg-blue-100 border-blue-500 rounded-xl border' : ''
+                    isSelected ? 'bg-blue-400 border-blue-800 rounded-xl border' : ''
                 }`}
             >
                 <Text className="text-2xl">{emoji}</Text>

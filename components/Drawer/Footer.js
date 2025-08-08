@@ -48,8 +48,8 @@ export default function Footer() {
     return (
         <View className="flex gap-4 px-4 py-6">
             <View>
-                <Text className="font-medium text-[20px]">{user?.name ?? 'Kullanıcı'}</Text>
-                <Text className="text-gray-500 text-[16px]">{user?.email ?? 'email@example.com'}</Text>
+                <Text className="font-medium text-white text-[20px]">{user?.name ?? 'Kullanıcı'}</Text>
+                <Text className="text-white text-[16px]">{user?.email ?? 'email@example.com'}</Text>
             </View>
 
             <View className="flex-row">

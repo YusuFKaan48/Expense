@@ -14,9 +14,15 @@ const Drawer = createDrawerNavigator();
 export default function DrawerLayout() {
 
     return (
-        <SafeAreaView className="flex-1 bg-white ">
+        <SafeAreaView className="flex-1 bg-[#121826] ">
             <Drawer.Navigator
                 initialRouteName="Ana sayfa"
+                screenOptions={{
+                    drawerLabelStyle: {color: 'white'},
+                    drawerInactiveTintColor: 'white',
+                    drawerActiveTintColor: 'white',
+                    drawerActiveBackgroundColor: '#2d3748',
+                }}
                 drawerContent={(props) => (
                     <DrawerContentScrollView
                         {...props}
@@ -24,13 +30,15 @@ export default function DrawerLayout() {
                             flex: 1,
                             justifyContent: 'space-between',
                             paddingTop: 0,
-                            paddingBottom: 0
+                            paddingBottom: 0,
+                            backgroundColor: '#121826'
+
                         }}
                     >
 
-                        <View className=" gap-4">
-                            <View className=" flex items-center">
-                                <Text className="text-[24px] font-medium">Giderli.app</Text>
+                        <View className=" gap-4 ">
+                            <View className=" flex items-center ">
+                                <Text className="text-[32px] text-white font-medium">Giderli</Text>
                             </View>
                             <DrawerItemList {...props} />
                         </View>
@@ -43,7 +51,10 @@ export default function DrawerLayout() {
                 <Drawer.Screen
                     name="Ana sayfa"
                     component={HomeScreen}
-                    options={{header: () => <Header/>}}
+                    options={{
+                        header: () => <Header/>
+
+                    }}
                 />
                 <Drawer.Screen
                     name="Kategori Ekle"
@@ -54,16 +65,16 @@ export default function DrawerLayout() {
                     name="Profile"
                     component={Profile}
                     options={{
-                        header: () => <Header />,
-                        drawerItemStyle: { display: 'none' }
+                        header: () => <Header/>,
+                        drawerItemStyle: {display: 'none'}
                     }}
                 />
                 <Drawer.Screen
                     name="List"
                     component={ListPage}
                     options={{
-                        header: () => <Header />,
-                        drawerItemStyle: { display: 'none' }
+                        header: () => <Header/>,
+                        drawerItemStyle: {display: 'none'}
                     }}
                 />
 

@@ -146,14 +146,14 @@ export default function NumPad() {
 
             <View className="flex-row justify-end">
                 <Pressable onPress={() => router.push('/drawer/List')}>
-                    <MoreHoriz width={36} height={36} />
+                    <MoreHoriz width={36} height={36} color='#fff'/>
                 </Pressable>
             </View>
 
             <View className="gap-2 justify-center items-center flex-1">
                 <View className="flex-row justify-center items-center">
                     <TextInput
-                        className="text-[54px] font-light text-right text-gray-800"
+                        className="text-[54px] font-light text-right text-white"
                         value={input}
                         onChangeText={handleTextChange}
                         onSelectionChange={(e) => setSelection(e.nativeEvent.selection)}
@@ -166,7 +166,7 @@ export default function NumPad() {
                 </View>
 
                 {selectedCategory && (
-                    <Text className="text-base text-gray-500">{selectedCategory.name}</Text>
+                    <Text className="text-base text-gray-400">{selectedCategory.name}</Text>
                 )}
             </View>
 
@@ -185,9 +185,9 @@ export default function NumPad() {
                                         <Pressable
                                             key={item}
                                             onPress={() => handlePress(item)}
-                                            className="flex-1 py-5 rounded-xl items-center bg-gray-300"
+                                            className="flex-1 py-5 rounded-xl items-center bg-gray-800"
                                         >
-                                            <Text className="text-2xl text-black">{item}</Text>
+                                            <Text className="text-2xl text-white">{item}</Text>
                                         </Pressable>
                                     ))}
                                 </View>
@@ -216,9 +216,9 @@ export default function NumPad() {
                                             intervalRef.current = null;
                                         }
                                     }}
-                                    className="rounded-xl items-center justify-center bg-gray-300 py-5"
+                                    className="rounded-xl items-center justify-center bg-gray-800 py-5"
                                 >
-                                    <Text className="text-2xl text-black">{item}</Text>
+                                    <Text className="text-2xl text-white">{item}</Text>
                                 </Pressable>
                             ))}
                         </View>

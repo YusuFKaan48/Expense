@@ -3,6 +3,7 @@ import { ScrollView, View, Text, Pressable, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '@/helper/fetch';
 import Toast from 'react-native-toast-message';
+import {LinearGradient} from "expo-linear-gradient";
 
 export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
     const scrollViewRef = useRef(null);
@@ -73,6 +74,35 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
 
     return (
         <View className="h-16 justify-center items-center relative">
+            <LinearGradient
+                colors={['#121826', 'rgba(18, 24, 38, 0)']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    zIndex: 10,
+                }}
+                pointerEvents="none"
+            />
+            <LinearGradient
+                colors={['rgba(18, 24, 38, 0)', '#121826' ]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    zIndex: 10,
+                }}
+                pointerEvents="none"
+            />
+
             <ScrollView
                 ref={scrollViewRef}
                 horizontal
@@ -92,13 +122,13 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
                     >
                         <Pressable
                             onPress={() => handleSelect(currency)}
-                            className={`px-4 py-2 rounded-full border ${
+                            className={`px-4 py-2 rounded-full border border-gray-600 ${
                                 defaultCurrency === currency
-                                    ? 'bg-blue-200 border-blue-500'
-                                    : 'bg-gray-100 border-gray-300'
+                                    ? 'bg-blue-400 border-blue-800'
+                                    : ''
                             }`}
                         >
-                            <Text className="text-[20px] font-medium text-gray-800">{currency}</Text>
+                            <Text className="text-[20px] font-medium text-gray-800 text-white">{currency}</Text>
                         </Pressable>
                     </View>
                 ))}

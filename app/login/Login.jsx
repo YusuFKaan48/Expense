@@ -36,15 +36,15 @@ export default function Login() {
     };
 
     return (
-        <View className="flex-1 items-center justify-center bg-[#F3F1EF] px-8">
-            <Text className="text-[24px] font-medium text-black mb-6">Log In</Text>
+        <View className="flex-1 items-center justify-center bg-[#121826] px-8">
+            <Text className="text-[24px] font-medium text-white mb-6">Log In</Text>
 
             <TextInput
                 value={email}
                 onChangeText={setEmail}
                 placeholder="Email"
                 placeholderTextColor="rgba(0,0,0,0.44)"
-                className="w-full text-[22px] bg-white text-black px-4 py-3 rounded-xl mb-4 shadow-sm"
+                className="w-full text-[22px] bg-gray-800 text-white px-4 py-3 rounded-xl mb-4 shadow-sm"
             />
 
             <TextInput
@@ -53,7 +53,7 @@ export default function Login() {
                 placeholder="Password"
                 placeholderTextColor="rgba(0,0,0,0.44)"
                 secureTextEntry
-                className="w-full text-[22px] bg-white text-black px-4 py-3 rounded-xl shadow-sm"
+                className="w-full text-[22px] bg-gray-800 text-white px-4 py-3 rounded-xl shadow-sm"
             />
 
             <View className="flex-row mt-6">

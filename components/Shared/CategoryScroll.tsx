@@ -76,17 +76,31 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     return (
         <View className="my-4 h-16 justify-center items-center relative">
             <LinearGradient
-                colors={['white', 'rgba(255,255,255,0)']}
+                colors={['#121826', 'rgba(18, 24, 38, 0)']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
-                className="absolute left-0 top-0 bottom-0 w-20 z-10"
+                style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    zIndex: 10,
+                }}
                 pointerEvents="none"
             />
             <LinearGradient
-                colors={['rgba(255,255,255,0)', 'white']}
+                colors={['rgba(18, 24, 38, 0)', '#121826' ]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
-                className="absolute right-0 top-0 bottom-0 w-20 z-10"
+                style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    zIndex: 10,
+                }}
                 pointerEvents="none"
             />
 

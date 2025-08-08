@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, Pressable, LayoutChangeEvent, Dimensions } from 'react-native';
+import React, {useRef, useState, useEffect} from 'react';
+import {View, Text, TextInput, ScrollView, Pressable, LayoutChangeEvent, Dimensions} from 'react-native';
 import Button from '@/components/Shared/Buton';
 import ApiService from '@/helper/fetch';
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 
 const emojiOptions = [
@@ -83,14 +83,14 @@ export default function CategoryCreate() {
     }, [selectedEmoji]);
 
     return (
-        <View className="bg-white">
-            <Text className="text-[24px] pb-2">Emoji seçin</Text>
+        <View>
+            <Text className="text-[24px] pb-2 text-white">Emoji seçin</Text>
 
             <View className="pt-2 h-16 justify-center relative">
                 <LinearGradient
-                    colors={['white', 'rgba(255,255,255,0)']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                    colors={['#121826', 'rgba(18, 24, 38, 0)']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
                     style={{
                         position: 'absolute',
                         left: 0,
@@ -102,9 +102,9 @@ export default function CategoryCreate() {
                     pointerEvents="none"
                 />
                 <LinearGradient
-                    colors={['rgba(255,255,255,0)', 'white']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                    colors={['rgba(18, 24, 38, 0)', '#121826' ]}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
                     style={{
                         position: 'absolute',
                         right: 0,
@@ -120,23 +120,23 @@ export default function CategoryCreate() {
                     ref={scrollViewRef}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ gap: 12, paddingHorizontal: 120 }}
+                    contentContainerStyle={{gap: 12, paddingHorizontal: 120}}
                 >
                     {emojiOptions.map((emoji, index) => (
                         <View
                             key={index}
                             onLayout={(e: LayoutChangeEvent) => {
                                 const layout = e.nativeEvent.layout;
-                                itemLayouts.current[emoji] = { x: layout.x, width: layout.width };
+                                itemLayouts.current[emoji] = {x: layout.x, width: layout.width};
                             }}
                         >
                             <Pressable
                                 onPress={() => setSelectedEmoji(emoji)}
                                 className={`px-4 py-2 ${
-                                    selectedEmoji === emoji ? 'bg-blue-200 border-blue-500 border rounded-lg' : ''
+                                    selectedEmoji === emoji ? 'bg-blue-400 border-blue-800 border rounded-lg' : ''
                                 }`}
                             >
-                                <Text className="text-[24px]">{emoji}</Text>
+                                <Text className="text-[24px] ">{emoji}</Text>
                             </Pressable>
                         </View>
                     ))}
@@ -144,13 +144,14 @@ export default function CategoryCreate() {
             </View>
 
             <View className="pt-4 gap-4">
-                <Text className="text-[24px]">Kategori ismi</Text>
+                <Text className="text-[24px] text-white">Kategori ismi</Text>
 
                 <TextInput
                     value={categoryName}
                     onChangeText={setCategoryName}
                     placeholder="Kategori adı..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-[20px]"
+                    placeholderTextColor="#9CA3AF"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
                 />
 
                 <View className="flex-row justify-center pt-2">

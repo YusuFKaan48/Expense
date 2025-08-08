@@ -3,6 +3,7 @@ import { View, Text, TextInput, ScrollView } from 'react-native';
 import Button from '@/components/Shared/Buton';
 import ApiService from '@/helper/fetch';
 import Toast from 'react-native-toast-message';
+import {LinearGradient} from "expo-linear-gradient";
 
 export default function CurrencyCreator() {
     const [currencies, setCurrencies] = useState<string[]>([]);
@@ -101,8 +102,38 @@ export default function CurrencyCreator() {
     }, []);
 
     return (
-        <View className="p-4 bg-white px-4 py-2 gap-3">
-            <Text className="text-[24px]">Ekli Para Birimleri</Text>
+        <View className="p-4 px-4 py-2 gap-3">
+            <Text className="text-[24px] text-white">Ekli Para Birimleri</Text>
+
+            <View className="h-16 justify-center items-center relative">
+            <LinearGradient
+                colors={['#121826', 'rgba(18, 24, 38, 0)']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    zIndex: 10,
+                }}
+                pointerEvents="none"
+            />
+            <LinearGradient
+                colors={['rgba(18, 24, 38, 0)', '#121826' ]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    zIndex: 10,
+                }}
+                pointerEvents="none"
+            />
 
             <ScrollView
                 horizontal
@@ -112,21 +143,24 @@ export default function CurrencyCreator() {
                 {currencies.map((currency, index) => (
                     <View
                         key={index}
-                        className="px-4 py-2 rounded-full border border-gray-300 bg-gray-100"
+                        className="px-4 py-2 rounded-full border  border-gray-600"
                         style={{ marginRight: index === currencies.length - 1 ? 0 : 12 }}
                     >
-                        <Text className="text-[24px]">{currency}</Text>
+                        <Text className="text-[24px] text-white">{currency}</Text>
                     </View>
                 ))}
             </ScrollView>
 
+            </View>
+
             <View className="gap-4">
-                <Text className="text-[24px]">Yeni Para Birimi Ekle</Text>
+                <Text className="text-[24px] text-white">Yeni Para Birimi Ekle</Text>
 
                 <TextInput
                     value={newCurrency}
                     onChangeText={setNewCurrency}
                     placeholder="₹"
+                    placeholderTextColor="#9CA3AF"
                     className="border border-gray-300 rounded-lg px-4 py-2 text-[24px]"
                 />
 
