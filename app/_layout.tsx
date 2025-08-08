@@ -38,7 +38,8 @@ export default function RootLayout() {
     return (
         <>
             <Slot />
-            <Toast config={toastConfig} />
+            <Toast config={toastConfig} topOffset={66} />
+
         </>
     );
 }

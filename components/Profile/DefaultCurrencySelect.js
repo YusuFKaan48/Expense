@@ -122,9 +122,9 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
                     >
                         <Pressable
                             onPress={() => handleSelect(currency)}
-                            className={`px-4 py-2 rounded-full border border-gray-600 ${
+                            className={`px-4 py-2 rounded-full ${
                                 defaultCurrency === currency
-                                    ? 'bg-blue-400 border-blue-800'
+                                    ? 'bg-gray-800 border-gray-900'
                                     : ''
                             }`}
                         >

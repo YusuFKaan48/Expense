@@ -6,19 +6,20 @@ type CategoryItemProps = {
     name: string;
     isSelected: boolean;
     onPress: () => void;
+    size?: number;
 };
 
 const CategoryItem = forwardRef<any, CategoryItemProps>(
-    ({emoji, name, isSelected, onPress}, ref) => {
+    ({emoji, name, isSelected, onPress, size = 32}, ref) => {
         return (
             <Pressable
                 ref={ref}
                 onPress={onPress}
                 className={`w-14 h-14 justify-center items-center mx-1 ${
-                    isSelected ? 'bg-blue-400 border-blue-800 rounded-xl border' : ''
+                    isSelected ? 'bg-gray-800 border-gray-900 rounded-xl border' : ''
                 }`}
             >
-                <Text className="text-2xl">{emoji}</Text>
+                <Text style={{fontSize: size}}>{emoji}</Text>
             </Pressable>
         );
     }

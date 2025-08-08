@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, Pressable} from 'react-native';
-import {NavArrowDown, NavArrowUp} from 'iconoir-react-native';
 import {useRouter} from 'expo-router';
 
 export type TransactionType = {
@@ -37,13 +36,7 @@ const TransactionList: React.FC<TransactionListProps> = ({transactions}) => {
             >
                 <View className="relative">
                     <Text className="text-4xl">{item.category_emoji}</Text>
-                    <View className="absolute -top-3 -right-3">
-                        {isIncome ? (
-                            <NavArrowDown width={20} height={20} color="#16a34a"/>
-                        ) : (
-                            <NavArrowUp width={20} height={20} color="#dc2626"/>
-                        )}
-                    </View>
+
                 </View>
 
                 <View className="flex-1 px-3">

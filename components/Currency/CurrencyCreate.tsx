@@ -143,7 +143,7 @@ export default function CurrencyCreator() {
                 {currencies.map((currency, index) => (
                     <View
                         key={index}
-                        className="px-4 py-2 rounded-full border  border-gray-600"
+                        className="px-4 py-2 rounded-full"
                         style={{ marginRight: index === currencies.length - 1 ? 0 : 12 }}
                     >
                         <Text className="text-[24px] text-white">{currency}</Text>
@@ -161,12 +161,12 @@ export default function CurrencyCreator() {
                     onChangeText={setNewCurrency}
                     placeholder="₹"
                     placeholderTextColor="#9CA3AF"
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-[24px]"
+                    className="border-b border-gray-300 rounded-lg px-4 py-2 text-[24px]"
                 />
 
                 <Button
                     label={loading ? 'Ekleniyor...' : 'Ekle'}
-                    color="bg-green-500"
+                    color="bg-green-600"
                     onPress={addCurrency}
                     disabled={loading}
                 />

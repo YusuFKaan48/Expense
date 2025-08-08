@@ -75,7 +75,7 @@ export default function CategoryCreate() {
         const layout = itemLayouts.current[selectedEmoji];
         if (!layout || !scrollViewRef.current) return;
 
-        const offset = layout.x + layout.width / 2 - screenWidth / 2 + 35;
+        const offset = layout.x + layout.width / 2 - screenWidth / 2 + 15;
         scrollViewRef.current.scrollTo({
             x: Math.max(0, offset),
             animated: true,
@@ -132,11 +132,11 @@ export default function CategoryCreate() {
                         >
                             <Pressable
                                 onPress={() => setSelectedEmoji(emoji)}
-                                className={`px-4 py-2 ${
-                                    selectedEmoji === emoji ? 'bg-blue-400 border-blue-800 border rounded-lg' : ''
+                                className={`px-2 py-2 ${
+                                    selectedEmoji === emoji ? 'bg-gray-800 border-gray-900 rounded-lg' : ''
                                 }`}
                             >
-                                <Text className="text-[24px] ">{emoji}</Text>
+                                <Text className="text-[32px] ">{emoji}</Text>
                             </Pressable>
                         </View>
                     ))}
@@ -151,14 +151,14 @@ export default function CategoryCreate() {
                     onChangeText={setCategoryName}
                     placeholder="Kategori adı..."
                     placeholderTextColor="#9CA3AF"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
+                    className="w-full border-b border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
                 />
 
                 <View className="flex-row justify-center pt-2">
                     <Button
                         label={isLoading ? 'Oluşturuluyor...' : 'Oluştur'}
                         onPress={handleCreateCategory}
-                        color="bg-blue-500"
+                        color="bg-blue-600"
                         disabled={isLoading}
                     />
                 </View>

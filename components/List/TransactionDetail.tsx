@@ -154,7 +154,7 @@ const TransactionDetail = () => {
                             onChangeText={setAmount}
                             placeholder="0.00"
                             placeholderTextColor="#9CA3AF"
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
+                            className="w-full border-b border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
                         />
                     </View>
 
@@ -168,7 +168,7 @@ const TransactionDetail = () => {
                             onChangeText={setDescription}
                             placeholder="Açıklama girin"
                             placeholderTextColor="#9CA3AF"
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
+                            className="w-full border-b border-gray-300 rounded-lg px-4 py-2 text-[20px] text-white"
                         />
                     </View>
 

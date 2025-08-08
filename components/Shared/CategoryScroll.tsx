@@ -76,7 +76,7 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     return (
         <View className="my-4 h-16 justify-center items-center relative">
             <LinearGradient
-                colors={['#121826', 'rgba(18, 24, 38, 0)']}
+                colors={['rgba(18, 24, 38, 1)', 'rgba(18, 24, 38, 0)']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 style={{
@@ -84,13 +84,13 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                     left: 0,
                     top: 0,
                     bottom: 0,
-                    width: 40,
+                    width: 150,
                     zIndex: 10,
                 }}
                 pointerEvents="none"
             />
             <LinearGradient
-                colors={['rgba(18, 24, 38, 0)', '#121826' ]}
+                colors={['rgba(18, 24, 38, 0)', 'rgba(18, 24, 38, 1)']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 style={{
@@ -98,7 +98,7 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                     right: 0,
                     top: 0,
                     bottom: 0,
-                    width: 40,
+                    width: 150,
                     zIndex: 10,
                 }}
                 pointerEvents="none"
@@ -110,22 +110,37 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{gap: 12, paddingHorizontal: 175}}
             >
-                {categories.map(({emoji, name, id}) => (
-                    <View
-                        key={id}
-                        onLayout={(e: LayoutChangeEvent) => {
-                            const layout = e.nativeEvent.layout;
-                            itemLayouts.current[emoji] = {x: layout.x, width: layout.width};
-                        }}
-                    >
-                        <CategoryItem
-                            emoji={emoji}
-                            name={name}
-                            isSelected={selectedCategory === emoji}
-                            onPress={() => onSelect({emoji, name})}
-                        />
-                    </View>
-                ))}
+                {categories.map(({emoji, name, id}, index) => {
+                    const selectedIndex = categories.findIndex(cat => cat.emoji === selectedCategory);
+                    const distance = selectedIndex === -1 ? 100 : Math.abs(index - selectedIndex);
+
+                    let fontSize = 16;
+                    if (distance === 0) fontSize = 32;
+                    else if (distance === 1) fontSize = 24;
+
+                    const isSelected = selectedCategory === emoji;
+
+                    return (
+                        <View
+                            key={id}
+                            onLayout={(e: LayoutChangeEvent) => {
+                                const layout = e.nativeEvent.layout;
+                                itemLayouts.current[emoji] = {x: layout.x, width: layout.width};
+                            }}
+                            style={{
+                                transform: [{scale: isSelected ? 1 : 0.8}],
+                            }}
+                        >
+                            <CategoryItem
+                                emoji={emoji}
+                                name={name}
+                                isSelected={isSelected}
+                                size={fontSize}
+                                onPress={() => onSelect({emoji, name})}
+                            />
+                        </View>
+                    );
+                })}
             </ScrollView>
         </View>
     );

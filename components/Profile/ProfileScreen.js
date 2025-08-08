@@ -58,11 +58,6 @@ export default function ProfileScreen() {
                     />
                 </View>
 
-                <Button
-                    label="Geri Dön"
-                    color="bg-green-500"
-                    onPress={() => router.back()}
-                />
             </View>
         </View>
     );

@@ -53,7 +53,7 @@ export default function Footer() {
             </View>
 
             <View className="flex-row">
-                <Button label="Çıkış" color="bg-red-500" onPress={logout} />
+                <Button label="Çıkış" color="bg-red-600" onPress={logout} />
             </View>
         </View>
     );

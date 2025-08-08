@@ -55,6 +55,21 @@ class ApiService {
         });
         return response.json();
     }
+
+    async put(url, parameters) {
+        const headers = this.getHeaders(false);
+        const body = JSON.stringify(parameters);
+
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            method: 'PUT',
+            headers,
+            body,
+        });
+
+        return response.json();
+    }
+
+
 }
 
 export default ApiService;
