@@ -1,5 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, View, ActivityIndicator, LayoutChangeEvent, Dimensions} from 'react-native';
+import {
+    ScrollView,
+    View,
+    ActivityIndicator,
+    LayoutChangeEvent,
+    Dimensions,
+    NativeSyntheticEvent,
+    NativeScrollEvent
+} from 'react-native';
 import CategoryItem from './CategoryItem';
 import {LinearGradient} from 'expo-linear-gradient';
 import ApiService from '@/helper/fetch';
@@ -21,6 +29,8 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     const scrollViewRef = useRef<ScrollView>(null);
     const itemLayouts = useRef<Record<string, { x: number; width: number }>>({});
     const screenWidth = Dimensions.get('window').width;
+
+    const [focusedCategory, setFocusedCategory] = useState<string | null>(selectedCategory);
 
     const fetchCategories = async () => {
         try {
@@ -55,15 +65,38 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
             }
 
             const {x, width} = layout;
-            const offset = x + width / 2 - screenWidth / 2 + 20;
+            const offset = x + width / 2 - screenWidth / 2 + 15;
 
             scrollViewRef.current.scrollTo({
                 x: Math.max(0, offset),
                 animated: true,
             });
+
+            setFocusedCategory(selectedCategory);
         };
         tryScrollToSelected();
     }, [selectedCategory, categories]);
+
+    const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const scrollX = event.nativeEvent.contentOffset.x;
+        let closestCategory: string | null = null;
+        let closestDistance = Number.MAX_VALUE;
+
+        for (const [emoji, layout] of Object.entries(itemLayouts.current)) {
+            const itemCenter = layout.x + layout.width / 2;
+            const screenCenter = scrollX + screenWidth / 2;
+            const distance = Math.abs(itemCenter - screenCenter);
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestCategory = emoji;
+            }
+        }
+
+        if (closestCategory !== focusedCategory) {
+            setFocusedCategory(closestCategory);
+        }
+    };
 
     if (loading) {
         return (
@@ -108,17 +141,33 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                 ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{gap: 12, paddingHorizontal: 175}}
+                contentContainerStyle={{gap: 12, paddingHorizontal: 150}}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+                onMomentumScrollEnd={(e) => {
+                    if (focusedCategory) {
+                        const cat = categories.find(c => c.emoji === focusedCategory);
+                        if (cat) onSelect({emoji: cat.emoji, name: cat.name});
+                    }
+                }}
             >
                 {categories.map(({emoji, name, id}, index) => {
-                    const selectedIndex = categories.findIndex(cat => cat.emoji === selectedCategory);
-                    const distance = selectedIndex === -1 ? 100 : Math.abs(index - selectedIndex);
-
                     let fontSize = 16;
-                    if (distance === 0) fontSize = 32;
-                    else if (distance === 1) fontSize = 24;
+                    let scale = 0.8;
 
-                    const isSelected = selectedCategory === emoji;
+                    if (emoji === focusedCategory) {
+                        fontSize = 32;
+                        scale = 1;
+                    } else {
+                        const focusedIndex = categories.findIndex(c => c.emoji === focusedCategory);
+                        if (focusedIndex !== -1) {
+                            const distance = Math.abs(index - focusedIndex);
+                            if (distance === 1) {
+                                fontSize = 24;
+                                scale = 0.9;
+                            }
+                        }
+                    }
 
                     return (
                         <View
@@ -128,13 +177,13 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                                 itemLayouts.current[emoji] = {x: layout.x, width: layout.width};
                             }}
                             style={{
-                                transform: [{scale: isSelected ? 1 : 0.8}],
+                                transform: [{scale}],
                             }}
                         >
                             <CategoryItem
                                 emoji={emoji}
                                 name={name}
-                                isSelected={isSelected}
+                                isSelected={emoji === selectedCategory}
                                 size={fontSize}
                                 onPress={() => onSelect({emoji, name})}
                             />

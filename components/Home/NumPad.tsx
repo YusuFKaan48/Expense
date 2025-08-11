@@ -4,7 +4,7 @@ import Button from '@/components/Shared/Buton';
 import CategoryScroll from '@/components/Shared/CategoryScroll';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApiService from '@/helper/fetch';
-import {Page} from 'iconoir-react-native';
+import {PageFlip} from 'iconoir-react-native';
 import CurrencyPicker from '@/components/Home/CurrencyPicker';
 import {useFocusEffect} from '@react-navigation/native';
 import {useRouter} from 'expo-router';
@@ -146,7 +146,7 @@ export default function NumPad() {
 
             <View className="flex-row justify-end">
                 <Pressable onPress={() => router.push('/drawer/List')}>
-                    <Page width={36} height={36} color='#fff'/>
+                    <PageFlip width={24} height={24} color='#9CA3AF'/>
                 </Pressable>
             </View>
 

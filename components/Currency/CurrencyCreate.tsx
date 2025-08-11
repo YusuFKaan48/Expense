@@ -161,7 +161,7 @@ export default function CurrencyCreator() {
                     onChangeText={setNewCurrency}
                     placeholder="₹"
                     placeholderTextColor="#9CA3AF"
-                    className="border-b border-gray-300 rounded-lg px-4 py-2 text-[24px]"
+                    className="border border-gray-500 bg-gray-800 rounded-lg px-4 py-2 text-[24px]"
                 />
 
                 <Button

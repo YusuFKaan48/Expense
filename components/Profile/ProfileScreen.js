@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useRouter} from 'expo-router';
-import Button from '@/components/Shared/Buton';
 import {DefaultCurrencySelect} from "./DefaultCurrencySelect";
 import {DefaultCategorySelect} from './DefaultCategorySelect';
 import {ProfileTopPart} from './ProfileTopPart';

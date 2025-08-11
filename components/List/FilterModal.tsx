@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import { Text, Pressable, ScrollView, Modal } from 'react-native';
-import CategoryScroll from './../Shared/CategoryScroll';
+import React, { useState, useEffect } from 'react';
+import { Text, Pressable, ScrollView, Modal, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Button from "@/components/Shared/Buton";
 
 export type ModalOption = { label: string; value: string | number };
 export type FilterType = 'month' | 'category' | 'currency' | null;
@@ -27,122 +28,161 @@ export default function FilterModal({
                                         months,
                                     }: Props) {
     const [tempSelectedValues, setTempSelectedValues] = useState<Record<Exclude<FilterType, null>, string | number | null>>(selectedValues);
+    const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
+    const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
+    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
 
     useEffect(() => {
         setTempSelectedValues(selectedValues);
+        setCurrencyDropdownOpen(false);
+        setMonthDropdownOpen(false);
+        setCategoryDropdownOpen(false);
     }, [visible, selectedValues]);
 
-    const handleOutsidePress = () => {
-        setVisible(false);
-        setTempSelectedValues(selectedValues);
-    };
+    const selectedCategory = categories.find(cat => cat.value === tempSelectedValues.category);
 
     return (
         <Modal visible={visible} transparent animationType="slide">
-            <Pressable
-                className="flex-1 bg-black bg-opacity-30 justify-center px-6"
-                onPress={handleOutsidePress}
-            >
+            <SafeAreaView className="flex-1">
                 <Pressable
-                    className="bg-[#121826] rounded-2xl py-5 px-4 max-h-[70%] gap-6"
+                    className="bg-[#121826] rounded-2xl py-2 px-4 flex-grow   gap-y-6"
                     onPress={(e) => e.stopPropagation()}
                 >
-                    <Text className="text-2xl font-bold text-center text-white">Filtre Seçimi</Text>
+                    <View className="flex-row justify-between items-center gap-20">
+                        <Text className="text-2xl font-bold text-white">Filtre Seçimi</Text>
 
-                    <Text className="text-white font-semibold">Ay Seçimi</Text>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ gap: 12, paddingHorizontal: 10, paddingBottom: 10 }}
-                        className="mb-4"
-                    >
-                        {months.map((opt) => {
-                            const isSelected = tempSelectedValues.month === opt.value;
-                            return (
-                                <Pressable
-                                    key={opt.value.toString()}
-                                    onPress={() =>
-                                        setTempSelectedValues({
-                                            ...tempSelectedValues,
-                                            month: opt.value,
-                                        })
-                                    }
-                                    className={`py-2 px-4 rounded-full ${isSelected ? 'bg-blue-800' : 'bg-blue-200'}`}
-                                >
-                                    <Text className={isSelected ? 'text-blue-200 font-semibold' : 'text-blue-700'}>
-                                        {opt.label}
-                                    </Text>
-                                </Pressable>
-                            );
-                        })}
-                    </ScrollView>
+                        <Button label="Kapat" color="bg-gray-700" onPress={() => setVisible(false)} />
+                    </View>
 
-                    <Text className="text-white font-semibold">Kategori Seçimi</Text>
-                    <CategoryScroll
-                        selectedCategory={tempSelectedValues.category as string | null}
-                        onSelect={(cat) => {
-                            setTempSelectedValues({
-                                ...tempSelectedValues,
-                                category: cat.emoji,
-                            });
-                        }}
-                    />
+                    <View className="flex flex-col gap-y-2">
+                        <Text className="text-white font-semibold">Ay Seçimi</Text>
+                        <View>
+                            <Pressable
+                                onPress={() => setMonthDropdownOpen(!monthDropdownOpen)}
+                                className="bg-gray-700 px-4 py-2 rounded-lg flex-row justify-between items-center"
+                            >
+                                <Text className="text-white">
+                                    {months.find(m => m.value === tempSelectedValues.month)?.label || 'Seçiniz'}
+                                </Text>
+                                <Text className="text-gray-400 ml-2">▼</Text>
+                            </Pressable>
 
-                    <Text className="text-white font-semibold mt-4 mb-2">Para Birimi</Text>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ gap: 12, paddingHorizontal: 10 }}
-                    >
-                        {currencies.map((opt) => {
-                            const isSelected = tempSelectedValues.currency === opt.value;
-                            return (
-                                <Pressable
-                                    key={opt.value.toString()}
-                                    onPress={() =>
-                                        setTempSelectedValues({
-                                            ...tempSelectedValues,
-                                            currency: opt.value,
-                                        })
-                                    }
-                                    className={`py-2 px-4 rounded-full ${isSelected ? 'bg-blue-800' : 'bg-blue-200'}`}
-                                >
-                                    <Text className={isSelected ? 'text-blue-200 font-semibold' : 'text-blue-700'}>
-                                        {opt.label}
-                                    </Text>
-                                </Pressable>
-                            );
-                        })}
-                    </ScrollView>
+                            {monthDropdownOpen && (
+                                <View className="bg-gray-700 mt-2 rounded-lg max-h-52">
+                                    <ScrollView>
+                                        {months.map((opt) => (
+                                            <Pressable
+                                                key={opt.value.toString()}
+                                                onPress={() => {
+                                                    setTempSelectedValues({
+                                                        ...tempSelectedValues,
+                                                        month: opt.value,
+                                                    });
+                                                    setMonthDropdownOpen(false);
+                                                }}
+                                                className={`px-4 py-2 ${tempSelectedValues.month === opt.value ? 'bg-gray-800' : ''}`}
+                                            >
+                                                <Text className={`${tempSelectedValues.month === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                                    {opt.label}
+                                                </Text>
+                                            </Pressable>
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            )}
+                        </View>
+                    </View>
 
-                    <Pressable
-                        onPress={() => {
+                    <View className="flex flex-col gap-y-2">
+                        <Text className="text-white font-semibold">Kategori Seçimi</Text>
+                        <View>
+                            <Pressable
+                                onPress={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+                                className="bg-gray-700 px-4 py-2 rounded-lg flex-row justify-between items-center"
+                            >
+                                <Text className="text-white">
+                                    {selectedCategory?.label || 'Seçiniz'}
+                                </Text>
+                                <Text className="text-gray-400 ml-2">▼</Text>
+                            </Pressable>
+
+                            {categoryDropdownOpen && (
+                                <View className="bg-gray-700 mt-2 rounded-lg max-h-52">
+                                    <ScrollView>
+                                        {categories.map((opt) => (
+                                            <Pressable
+                                                key={opt.value.toString()}
+                                                onPress={() => {
+                                                    setTempSelectedValues({
+                                                        ...tempSelectedValues,
+                                                        category: opt.value,
+                                                    });
+                                                    setCategoryDropdownOpen(false);
+                                                }}
+                                                className={`px-4 py-2 ${tempSelectedValues.category === opt.value ? 'bg-gray-800' : ''}`}
+                                            >
+                                                <Text className={`${tempSelectedValues.category === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                                    {opt.label}
+                                                </Text>
+                                            </Pressable>
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+
+                    <View className="flex flex-col gap-y-2">
+                        <Text className="text-white font-semibold">Para Birimi</Text>
+                        <View>
+                            <Pressable
+                                onPress={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
+                                className="bg-gray-700 px-4 py-2 rounded-lg flex-row justify-between items-center"
+                            >
+                                <Text className="text-white">
+                                    {currencies.find(c => c.value === tempSelectedValues.currency)?.label || 'Seçiniz'}
+                                </Text>
+                                <Text className="text-gray-400 ml-2">▼</Text>
+                            </Pressable>
+
+                            {currencyDropdownOpen && (
+                                <View className="bg-gray-700 mt-2 rounded-lg max-h-52">
+                                    <ScrollView>
+                                        {currencies.map((opt) => (
+                                            <Pressable
+                                                key={opt.value.toString()}
+                                                onPress={() => {
+                                                    setTempSelectedValues({
+                                                        ...tempSelectedValues,
+                                                        currency: opt.value,
+                                                    });
+                                                    setCurrencyDropdownOpen(false);
+                                                }}
+                                                className={`px-4 py-2 ${tempSelectedValues.currency === opt.value ? 'bg-gray-800' : ''}`}
+                                            >
+                                                <Text className={`${tempSelectedValues.currency === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                                    {opt.label}
+                                                </Text>
+                                            </Pressable>
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+
+                    <View className="flex flex-row w-full gap-2">
+                        <Button label="Uygula" color="bg-green-600" onPress={() => {
                             setSelectedValues(tempSelectedValues);
                             setVisible(false);
-                        }}
-                        className="mt-6 bg-blue-600 py-3 rounded-full items-center"
-                    >
-                        <Text className="font-bold text-white">Filtreyi Uygula</Text>
-                    </Pressable>
-
-                    <Pressable
-                        onPress={() => {
+                        }} />
+                        <Button label="Temizle" color="bg-red-600" onPress={() => {
                             onClearAll();
                             setVisible(false);
-                        }}
-                        className="mt-2 bg-red-300 py-3 rounded-full items-center"
-                    >
-                        <Text className="font-semibold text-red-800">Tümünü Temizle</Text>
-                    </Pressable>
-
-                    <Pressable
-                        onPress={() => setVisible(false)}
-                        className="pt-2 bg-gray-700 py-3 rounded-full items-center"
-                    >
-                        <Text className="font-semibold text-white">Kapat</Text>
-                    </Pressable>
+                        }} />
+                    </View>
                 </Pressable>
-            </Pressable>
+            </SafeAreaView>
         </Modal>
     );
 }

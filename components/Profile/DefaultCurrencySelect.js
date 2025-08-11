@@ -107,7 +107,7 @@ export function DefaultCurrencySelect({ defaultCurrency, setDefaultCurrency }) {
                 ref={scrollViewRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 12, paddingHorizontal: 80 }}
+                contentContainerStyle={{ gap: 12, paddingHorizontal: 160 }}
             >
                 {currencyOptions.map((currency) => (
                     <View
