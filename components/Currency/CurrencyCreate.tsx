@@ -138,7 +138,7 @@ export default function CurrencyCreator() {
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 12, alignItems: 'center' }}
+                contentContainerStyle={{ gap: 12, paddingHorizontal: 150 }}
             >
                 {currencies.map((currency, index) => (
                     <View

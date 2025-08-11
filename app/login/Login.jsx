@@ -59,7 +59,7 @@ export default function Login() {
             <View className="flex-row mt-6">
                 <Button
                     label="Continue"
-                    color="bg-blue-500"
+                    color="bg-blue-600"
                     onPressIn={() => setIsPressed(true)}
                     onPressOut={() => setIsPressed(false)}
                     onPress={handleLogin}

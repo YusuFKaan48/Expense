@@ -24,6 +24,7 @@ const TransactionList: React.FC<TransactionListProps> = ({transactions}) => {
         const date = new Date(item.created_at);
         const formattedDate = date.toLocaleDateString('tr-TR');
         const isIncome = item.type === 'gelir';
+        const descriptionColorClass = item.description ? 'text-white' : 'text-gray-300';
 
         return (
             <Pressable
@@ -32,15 +33,14 @@ const TransactionList: React.FC<TransactionListProps> = ({transactions}) => {
                     pathname: '../Transaction/[id]',
                     params: {id: item.id.toString()}
                 })}
-                className="flex-row items-center border-b border-gray-500 py-3 px-2"
+                className="flex-row items-center border-b border-gray-600 py-3 px-2"
             >
                 <View className="relative">
                     <Text className="text-4xl">{item.category_emoji}</Text>
-
                 </View>
 
                 <View className="flex-1 px-3">
-                    <Text className="text-lg font-semibold text-white">
+                    <Text className={`text-lg font-semibold ${descriptionColorClass}`}>
                         {item.description || '...'}
                     </Text>
                     <Text className="text-sm text-gray-300">
@@ -60,6 +60,7 @@ const TransactionList: React.FC<TransactionListProps> = ({transactions}) => {
     if (transactions.length === 0) {
         return (
             <Text className="text-center text-gray-400 pt-5">
+                {/* Liste boş */}
             </Text>
         );
     }

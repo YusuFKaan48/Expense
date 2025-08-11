@@ -12,6 +12,7 @@ import {useRouter, useLocalSearchParams} from 'expo-router';
 import ApiService from '@/helper/fetch';
 import Button from '@/components/Shared/Buton';
 import {NavArrowLeft} from 'iconoir-react-native';
+import Toast from "react-native-toast-message";
 
 export type TransactionType = {
     id: number;
@@ -71,12 +72,17 @@ const TransactionDetail = () => {
         fetchTransaction();
     }, [id]);
 
+
     const saveTransaction = async () => {
         if (!transaction) return;
 
         const parsedAmount = parseFloat(amount);
         if (isNaN(parsedAmount)) {
-            Alert.alert('Hata', 'Geçerli bir tutar girin.');
+            Toast.show({
+                type: 'error',
+                text1: 'Hata',
+                text2: 'Geçerli bir tutar girin.',
+            });
             return;
         }
 
@@ -91,16 +97,29 @@ const TransactionDetail = () => {
 
             if (response && response.success === true) {
                 setTransaction(response.transaction);
-                Alert.alert('Başarılı', 'İşlem güncellendi.');
+                Toast.show({
+                    type: 'success',
+                    text1: 'Başarılı',
+                    text2: 'İşlem güncellendi.',
+                });
                 router.back();
             } else {
-                Alert.alert('Hata', 'Güncelleme başarısız.');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hata',
+                    text2: 'Güncelleme başarısız.',
+                });
             }
         } catch (err) {
             console.error(err);
-            Alert.alert('Sunucu Hatası', 'Güncelleme sırasında hata oluştu.');
+            Toast.show({
+                type: 'error',
+                text1: 'Sunucu Hatası',
+                text2: 'Güncelleme sırasında hata oluştu.',
+            });
         }
     };
+
 
     if (loading) {
         return (

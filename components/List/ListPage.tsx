@@ -48,6 +48,15 @@ export default function ListPage() {
     const [categoryModalVisible, setCategoryModalVisible] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+    const categoryCurrencies = useMemo(() => {
+        const map: Record<string, Set<string>> = {};
+        allTransactions.forEach(t => {
+            if (!map[t.category_name]) map[t.category_name] = new Set();
+            map[t.category_name].add(t.currency);
+        });
+        return map;
+    }, [allTransactions]);
+
     useEffect(() => {
         const fetchDefaultCurrency = async () => {
             try {
@@ -192,30 +201,46 @@ export default function ListPage() {
                         <Chart monthlyData={monthlyData}/>
 
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
-                            {Object.entries(categoryTotals).map(([categoryName, {emoji, amount}]) => (
-                                <View
-                                    key={categoryName}
-                                    className="bg-gray-800 rounded-lg p-4 mt-6 mr-4 relative min-w-[120px] items-start"
-                                >
-                                    <Pressable
-                                        onPress={() => {
+                            {Object.entries(categoryTotals).map(([categoryName, {emoji, amount}]) => {
+                                const hasMultipleCurrencies = categoryCurrencies[categoryName]?.size > 1;
+
+                                const Container = hasMultipleCurrencies ? Pressable : View;
+                                const containerProps = hasMultipleCurrencies
+                                    ? {
+                                        onPress: () => {
                                             setSelectedCategory(categoryName);
                                             setCategoryModalVisible(true);
-                                        }}
-                                        className="absolute top-2 right-2 p-1"
-                                    >
-                                        <MoreVert width={20} height={20} color="#fff"/>
-                                    </Pressable>
+                                        },
+                                        className: "bg-gray-800 rounded-lg p-4 mt-6 mr-4 relative min-w-[120px] items-start",
+                                    }
+                                    : {
+                                        className: "bg-gray-800 rounded-lg p-4 mt-6 mr-4 relative min-w-[120px] items-start",
+                                    };
 
-                                    <Text className="text-[32px] mb-1">{emoji}</Text>
-                                    <Text className="text-white text-[20px] font-semibold text-left">
-                                        {categoryName}
-                                    </Text>
-                                    <Text className="text-gray-300 text-[16px] gap-1">
-                                        {defaultCurrency}: {amount.toFixed(2)}
-                                    </Text>
-                                </View>
-                            ))}
+                                return (
+                                    <Container key={categoryName} {...containerProps}>
+                                        {hasMultipleCurrencies && (
+                                            <Pressable
+                                                onPress={() => {
+                                                    setSelectedCategory(categoryName);
+                                                    setCategoryModalVisible(true);
+                                                }}
+                                                className="absolute top-2 right-2 p-1"
+                                            >
+                                                <MoreVert width={20} height={20} color="#fff"/>
+                                            </Pressable>
+                                        )}
+
+                                        <Text className="text-[32px] mb-1">{emoji}</Text>
+                                        <Text className="text-white text-[20px] font-semibold text-left">
+                                            {categoryName}
+                                        </Text>
+                                        <Text className="text-gray-300 text-[16px] gap-1">
+                                            {defaultCurrency}: {amount.toFixed(2)}
+                                        </Text>
+                                    </Container>
+                                );
+                            })}
                         </ScrollView>
 
                         <View className="flex-row justify-between items-center">

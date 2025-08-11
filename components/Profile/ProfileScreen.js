@@ -40,21 +40,38 @@ export default function ProfileScreen() {
 
     return (
         <View className="flex-1 justify-between">
-            <View className="flex-1  px-4 pt-2 pb-2">
+            <View className="flex-1  px-4 py-2">
                 <View className="gap-2 flex-1">
+
+                    <View className='border-b border-gray-600'>
+
+                    <Text className="text-[24px] text-white font-semibold mb-2">Profil bilgileri</Text>
+
                     <ProfileTopPart name={user.name} email={user.email}/>
 
-                    <Text className="font-medium text-[20px] text-gray-200">Varsayılan kategori ve Para birimi seçimi</Text>
+                    </View>
+
+                    <View className='border-b border-gray-600'>
+
+                    <Text className="text-[24px] text-white">Varsayılan Kategori</Text>
 
                     <DefaultCategorySelect
                         defaultCategory={defaultCategory}
                         setDefaultCategory={setDefaultCategory}
                     />
 
+                    </View>
+
+                    <View className='border-b border-gray-600'>
+
+                    <Text className="text-[24px] text-white">Varsayılan Para Birimi</Text>
+
                     <DefaultCurrencySelect
                         defaultCurrency={defaultCurrency}
                         setDefaultCurrency={setDefaultCurrency}
                     />
+
+                    </View>
                 </View>
 
             </View>

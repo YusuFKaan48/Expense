@@ -120,7 +120,7 @@ export default function CategoryCreate() {
                     ref={scrollViewRef}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{gap: 12, paddingHorizontal: 120}}
+                    contentContainerStyle={{gap: 12, paddingHorizontal: 150}}
                 >
                     {emojiOptions.map((emoji, index) => (
                         <View
@@ -158,7 +158,7 @@ export default function CategoryCreate() {
                     <Button
                         label={isLoading ? 'Oluşturuluyor...' : 'Oluştur'}
                         onPress={handleCreateCategory}
-                        color="bg-blue-600"
+                        color="bg-green-600"
                         disabled={isLoading}
                     />
                 </View>

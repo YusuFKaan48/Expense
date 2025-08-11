@@ -6,7 +6,8 @@ import {
     LayoutChangeEvent,
     Dimensions,
     NativeSyntheticEvent,
-    NativeScrollEvent
+    NativeScrollEvent,
+    Animated,
 } from 'react-native';
 import CategoryItem from './CategoryItem';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -31,6 +32,31 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
     const screenWidth = Dimensions.get('window').width;
 
     const [focusedCategory, setFocusedCategory] = useState<string | null>(selectedCategory);
+
+    const scales = useRef<Record<string, Animated.Value>>({}).current;
+
+    useEffect(() => {
+        categories.forEach(cat => {
+            if (!scales[cat.emoji]) {
+                scales[cat.emoji] = new Animated.Value(cat.emoji === selectedCategory ? 1 : 0.8);
+            }
+        });
+    }, [categories, scales, selectedCategory]);
+
+    useEffect(() => {
+        if (!focusedCategory) return;
+
+        categories.forEach(cat => {
+            const toValue = cat.emoji === focusedCategory ? 1 : 0.7;
+            if (scales[cat.emoji]) {
+                Animated.timing(scales[cat.emoji], {
+                    toValue,
+                    duration: 300,
+                    useNativeDriver: true,
+                }).start();
+            }
+        });
+    }, [focusedCategory, categories, scales]);
 
     const fetchCategories = async () => {
         try {
@@ -144,33 +170,18 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                 contentContainerStyle={{gap: 12, paddingHorizontal: 150}}
                 onScroll={onScroll}
                 scrollEventThrottle={16}
-                onMomentumScrollEnd={(e) => {
+                onMomentumScrollEnd={() => {
                     if (focusedCategory) {
                         const cat = categories.find(c => c.emoji === focusedCategory);
                         if (cat) onSelect({emoji: cat.emoji, name: cat.name});
                     }
                 }}
             >
-                {categories.map(({emoji, name, id}, index) => {
-                    let fontSize = 16;
-                    let scale = 0.8;
-
-                    if (emoji === focusedCategory) {
-                        fontSize = 32;
-                        scale = 1;
-                    } else {
-                        const focusedIndex = categories.findIndex(c => c.emoji === focusedCategory);
-                        if (focusedIndex !== -1) {
-                            const distance = Math.abs(index - focusedIndex);
-                            if (distance === 1) {
-                                fontSize = 24;
-                                scale = 0.9;
-                            }
-                        }
-                    }
+                {categories.map(({emoji, name, id}) => {
+                    const scale = scales[emoji] || new Animated.Value(0.8);
 
                     return (
-                        <View
+                        <Animated.View
                             key={id}
                             onLayout={(e: LayoutChangeEvent) => {
                                 const layout = e.nativeEvent.layout;
@@ -184,10 +195,10 @@ export default function CategoryScroll({onSelect, selectedCategory}: Props) {
                                 emoji={emoji}
                                 name={name}
                                 isSelected={emoji === selectedCategory}
-                                size={fontSize}
+                                size={32}
                                 onPress={() => onSelect({emoji, name})}
                             />
-                        </View>
+                        </Animated.View>
                     );
                 })}
             </ScrollView>

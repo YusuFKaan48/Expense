@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Text, Pressable, ScrollView, Modal, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState, useEffect} from 'react';
+import {Text, Pressable, ScrollView, Modal, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Button from "@/components/Shared/Buton";
 
 export type ModalOption = { label: string; value: string | number };
@@ -51,7 +51,7 @@ export default function FilterModal({
                     <View className="flex-row justify-between items-center gap-20">
                         <Text className="text-2xl font-bold text-white">Filtre Seçimi</Text>
 
-                        <Button label="Kapat" color="bg-gray-700" onPress={() => setVisible(false)} />
+                        <Button label="Kapat" color="bg-gray-700" onPress={() => setVisible(false)}/>
                     </View>
 
                     <View className="flex flex-col gap-y-2">
@@ -82,7 +82,8 @@ export default function FilterModal({
                                                 }}
                                                 className={`px-4 py-2 ${tempSelectedValues.month === opt.value ? 'bg-gray-800' : ''}`}
                                             >
-                                                <Text className={`${tempSelectedValues.month === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                                <Text
+                                                    className={`${tempSelectedValues.month === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
                                                     {opt.label}
                                                 </Text>
                                             </Pressable>
@@ -121,7 +122,8 @@ export default function FilterModal({
                                                 }}
                                                 className={`px-4 py-2 ${tempSelectedValues.category === opt.value ? 'bg-gray-800' : ''}`}
                                             >
-                                                <Text className={`${tempSelectedValues.category === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                                <Text
+                                                    className={`${tempSelectedValues.category === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
                                                     {opt.label}
                                                 </Text>
                                             </Pressable>
@@ -160,7 +162,8 @@ export default function FilterModal({
                                                 }}
                                                 className={`px-4 py-2 ${tempSelectedValues.currency === opt.value ? 'bg-gray-800' : ''}`}
                                             >
-                                                <Text className={`${tempSelectedValues.currency === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
+                                                <Text
+                                                    className={`${tempSelectedValues.currency === opt.value ? 'text-white font-semibold' : 'text-gray-400'}`}>
                                                     {opt.label}
                                                 </Text>
                                             </Pressable>
@@ -175,11 +178,11 @@ export default function FilterModal({
                         <Button label="Uygula" color="bg-green-600" onPress={() => {
                             setSelectedValues(tempSelectedValues);
                             setVisible(false);
-                        }} />
+                        }}/>
                         <Button label="Temizle" color="bg-red-600" onPress={() => {
                             onClearAll();
                             setVisible(false);
-                        }} />
+                        }}/>
                     </View>
                 </Pressable>
             </SafeAreaView>
