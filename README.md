@@ -1,50 +1,71 @@
-# Welcome to your Expo app 👋
+Expense Tracker 📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Expense Tracker is a mobile application developed with React Native and TypeScript to help users manage and track their expenses.
 
-## Get started
+The application provides a mobile interface for recording expenses and managing financial information, with a backend service supporting its core functionality.
 
-1. Install dependencies
+✨ Features
 
-   ```bash
-   npm install
-   ```
+* Expense Management: Record and manage expenses.
+* User Authentication: Authenticate users through the backend service.
+* REST API Integration: Communicate with the backend to exchange application data.
+* Notifications: Support for application notifications.
+* Dark Mode: A dark appearance option for a more comfortable user experience.
 
-2. Start the app
+🛠️ Technologies
 
-   ```bash
-   npx expo start
-   ```
+* React Native — Cross-platform mobile application development
+* TypeScript — Type-safe JavaScript development
+* Laravel / PHP REST API — Backend integration
 
-In the output, you'll find options to open the app in a
+🏗️ Architecture
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+The project follows a client-server approach:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+* Mobile Application: React Native and TypeScript
+* Backend: Laravel and PHP
+* Communication: REST API
 
-## Get a fresh project
+The mobile application communicates with the backend to handle authentication and expense-related operations.
 
-When you're ready, run:
+🚀 Getting Started
 
-```bash
-npm run reset-project
-```
+Prerequisites
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+* Node.js
+* npm
+* React Native development environment
 
-## Learn more
+Installation
 
-To learn more about developing your project with Expo, look at the following resources:
+1. Clone the repository:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+git clone <repository-url>
 
-## Join the community
+2. Navigate to the project directory:
 
-Join our community of developers creating universal apps.
+cd Expense
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+3. Install dependencies:
+
+npm install
+
+4. Configure the backend API endpoint according to your local development environment.
+5. Start the application using the appropriate React Native commands for your development setup.
+
+🔗 Backend
+
+The application uses a separate backend service built with Laravel and PHP.
+
+Backend Repository: Add the ExpenseBackend repository link here.
+
+📌 Project Information
+
+* Project Type: Personal project
+* Platform: Mobile
+* Frontend: React Native with TypeScript
+* Backend: Laravel / PHP
+
+⸻
+
+Built as a hands-on project to explore mobile application development, API integration, and client-server architecture.
